@@ -3,14 +3,15 @@ import type { Plugin } from 'vite';
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { virtualModules } from '../../../../internal-utils/virtual-modules';
-import { ResolvedConfig } from '../../../../types';
-import { VirtualModuleId, virtualModuleNames } from '../../../virtual-modules';
+import type { ResolvedConfig } from '../../../../types';
+import type { VirtualModuleId } from '../../../virtual-modules';
+import { virtualModuleNames } from '../../../virtual-modules';
 
 /**
  * Resolve all the virtual modules to the templates bundled as strings in
  * `internal-utils/virtual-modules.ts`.
  */
-export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
+export const resolveVirtualModules = (config: ResolvedConfig): Plugin[] => {
   return virtualModuleNames.map((name) => {
     const virtualId: `${VirtualModuleId}?` = `virtual:wxt-${name}?`;
     const resolvedVirtualId = '\0' + virtualId;
@@ -49,4 +50,4 @@ export function resolveVirtualModules(config: ResolvedConfig): Plugin[] {
       },
     };
   });
-}
+};

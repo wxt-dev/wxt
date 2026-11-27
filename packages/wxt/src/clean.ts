@@ -5,7 +5,7 @@ import { styleText } from 'node:util';
 import { glob } from 'tinyglobby';
 
 import { registerWxt, wxt } from './internal/wxt';
-import { InlineConfig } from './types';
+import type { InlineConfig } from './types';
 
 /**
  * Remove generated/temp files from the directory.
@@ -15,7 +15,7 @@ import { InlineConfig } from './types';
  *
  * @param config Optional config that will override your `<root>/wxt.config.ts`.
  */
-export async function clean(config?: InlineConfig): Promise<void> {
+export const clean = async (config?: InlineConfig): Promise<void> => {
   await registerWxt('build', config);
   wxt.logger.info('Cleaning Project');
 
@@ -55,4 +55,4 @@ export async function clean(config?: InlineConfig): Promise<void> {
       'Deleted ' + styleText('cyan', path.relative(root, directory)),
     );
   }
-}
+};

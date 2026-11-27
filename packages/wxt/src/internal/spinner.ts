@@ -20,10 +20,10 @@ export interface Spinner {
   error(finalText?: string): Spinner;
 }
 
-export function createSpinner(
+export const createSpinner = (
   initialText: string = '',
   options: SpinnerOptions = {},
-): Spinner {
+): Spinner => {
   const { color = 'cyan' } = options;
   const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
   const FRAME_INTERVAL = 80;
@@ -31,11 +31,11 @@ export function createSpinner(
   let timer: ReturnType<typeof setInterval> | null = null;
   let text = initialText;
 
-  function render(): void {
+  const render = (): void => {
     const frame = frames[frameIndex % frames.length];
     const coloredFrame = color ? styleText(color, frame) : frame;
     process.stdout.write(`\r${coloredFrame} ${text}\x1B[K`);
-  }
+  };
 
   const spinner: Spinner = {
     start(startText?: string): Spinner {
@@ -85,4 +85,4 @@ export function createSpinner(
   };
 
   return spinner;
-}
+};

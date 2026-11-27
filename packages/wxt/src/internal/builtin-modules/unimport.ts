@@ -71,9 +71,9 @@ export default defineWxtModule({
   },
 });
 
-async function getImportsDeclarationEntry(
+const getImportsDeclarationEntry = async (
   unimport: Unimport,
-): Promise<WxtDirFileEntry> {
+): Promise<WxtDirFileEntry> => {
   return {
     path: 'types/imports.d.ts',
     text: [
@@ -83,12 +83,12 @@ async function getImportsDeclarationEntry(
     ].join('\n'),
     tsReference: true,
   };
-}
+};
 
-async function getImportsModuleEntry(
+const getImportsModuleEntry = async (
   wxt: Wxt,
   unimport: Unimport,
-): Promise<WxtDirFileEntry> {
+): Promise<WxtDirFileEntry> => {
   const imports = await unimport.getImports();
   return {
     path: 'types/imports-module.d.ts',
@@ -102,13 +102,13 @@ async function getImportsModuleEntry(
     ].join('\n'),
     tsReference: true,
   };
-}
+};
 
-async function getEslintConfigEntry(
+const getEslintConfigEntry = async (
   unimport: Unimport,
   configVersion: EslintConfigVersion,
   options: WxtResolvedUnimportOptions,
-): Promise<WxtDirFileEntry[]> {
+): Promise<WxtDirFileEntry[]> => {
   const globals = (await unimport.getImports())
     .map((i) => i.as ?? i.name)
     .filter(Boolean)
@@ -120,24 +120,24 @@ async function getEslintConfigEntry(
 
   if (configVersion === 8) return getEslint8ConfigEntry(options, globals);
   return getEslint9ConfigEntry(options, globals);
-}
+};
 
-export function getEslint8ConfigEntry(
+export const getEslint8ConfigEntry = (
   options: WxtResolvedUnimportOptions,
   globals: Record<string, EslintGlobalsPropValue>,
-): WxtDirFileEntry[] {
+): WxtDirFileEntry[] => {
   return [
     {
       path: options.eslintrc.filePath,
       text: JSON.stringify({ globals }, null, 2) + '\n',
     },
   ];
-}
+};
 
-export function getEslint9ConfigEntry(
+export const getEslint9ConfigEntry = (
   options: WxtResolvedUnimportOptions,
   globals: Record<string, EslintGlobalsPropValue>,
-): WxtDirFileEntry[] {
+): WxtDirFileEntry[] => {
   const javaScriptFileEntry: WxtDirFileEntry = {
     path: options.eslintrc.filePath,
     text: `const globals = ${JSON.stringify(globals, null, 2)}
@@ -168,4 +168,4 @@ export default config;
   };
 
   return [javaScriptFileEntry, typeScriptFileEntry];
-}
+};

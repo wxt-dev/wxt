@@ -7,9 +7,9 @@
  *   return a value based on it.
  * @returns The result of the first module that resolves successfully.
  */
-export async function withFirstModule<T>(
+export const withFirstModule = async <T>(
   ...mappers: Array<() => Promise<NoInfer<T>> | NoInfer<T>>
-): Promise<T> {
+): Promise<T> => {
   for (const map of mappers) {
     try {
       return await map();
@@ -18,21 +18,21 @@ export async function withFirstModule<T>(
     }
   }
   throw Error('No optional modules found');
-}
+};
 
-export async function tryImport<T>(
+export const tryImport = async <T>(
   fn: () => Promise<T>,
-): Promise<T | undefined> {
+): Promise<T | undefined> => {
   try {
     return await fn();
   } catch (err) {
     if (isModuleNotFound(err)) return undefined;
     throw err;
   }
-}
+};
 
 const MODULE_NOT_FOUND_CODE = 'ERR_MODULE_NOT_FOUND';
 
-function isModuleNotFound(err: any): boolean {
+const isModuleNotFound = (err: any): boolean => {
   return err?.code === MODULE_NOT_FOUND_CODE;
-}
+};

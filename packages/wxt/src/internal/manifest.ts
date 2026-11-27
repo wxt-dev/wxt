@@ -12,8 +12,8 @@ import { ContentSecurityPolicy } from '../internal-utils/csp-utils';
 import { getEntrypointBundlePath } from '../internal-utils/entrypoint-utils';
 import { writeFileIfDifferent } from '../internal-utils/fs-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import { ManifestV3WebAccessibleResource } from '../internal-utils/type-utils';
-import {
+import type { ManifestV3WebAccessibleResource } from '../internal-utils/type-utils';
+import type {
   Entrypoint,
   BackgroundEntrypoint,
   BuildOutput,
@@ -27,10 +27,10 @@ import { addDiscoveredThemeIcons } from './theme-icons';
 import { wxt } from './wxt';
 
 /** Writes the manifest to the output directory and the build output. */
-export async function writeManifest(
+export const writeManifest = async (
   manifest: Browser.runtime.Manifest,
   output: BuildOutput,
-): Promise<void> {
+): Promise<void> => {
   const str =
     wxt.config.mode === 'production'
       ? JSON.stringify(manifest)
@@ -43,13 +43,13 @@ export async function writeManifest(
     type: 'asset',
     fileName: 'manifest.json',
   });
-}
+};
 
 /** Generates the manifest based on the config and entrypoints. */
-export async function generateManifest(
+export const generateManifest = async (
   allEntrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): Promise<{ manifest: Browser.runtime.Manifest; warnings: any[][] }> {
+): Promise<{ manifest: Browser.runtime.Manifest; warnings: any[][] }> => {
   const entrypoints = allEntrypoints.filter((entry) => !entry.skipped);
 
   const warnings: any[][] = [];
@@ -83,7 +83,7 @@ export async function generateManifest(
     );
   }
 
-  let manifest = defu(userManifest, baseManifest) as Browser.runtime.Manifest;
+  const manifest = defu(userManifest, baseManifest) as Browser.runtime.Manifest;
 
   // Add reload command in dev mode
   if (wxt.config.command === 'serve' && wxt.config.dev.reloadCommand) {
@@ -180,14 +180,14 @@ export async function generateManifest(
     manifest,
     warnings,
   };
-}
+};
 
 /**
  * Removes suffixes from the version, like X.Y.Z-alpha1 (which browsers don't
  * allow), so it's a simple version number, like X or X.Y or X.Y.Z, which
  * browsers allow.
  */
-function simplifyVersion(versionName: string): string {
+const simplifyVersion = (versionName: string): string => {
   // Regex adapted from here: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/version#version_format
   const version = /^((0|[1-9][0-9]{0,8})([.](0|[1-9][0-9]{0,8})){0,3}).*$/.exec(
     versionName,
@@ -199,13 +199,13 @@ function simplifyVersion(versionName: string): string {
     );
 
   return version;
-}
+};
 
-function addEntrypoints(
+const addEntrypoints = (
   manifest: Browser.runtime.Manifest,
   entrypoints: Entrypoint[],
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): void {
+): void => {
   const entriesByType = entrypoints.reduce<
     Partial<Record<Entrypoint['type'], Entrypoint[]>>
   >((map, entrypoint) => {
@@ -457,11 +457,11 @@ function addEntrypoints(
       manifest.web_accessible_resources.push(...contentScriptCssResources);
     }
   }
-}
+};
 
-function discoverIcons(
+const discoverIcons = (
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): Browser.runtime.Manifest['icons'] {
+): Browser.runtime.Manifest['icons'] => {
   const icons: [string, string][] = [];
   // prettier-ignore
   // #region snippet
@@ -491,9 +491,9 @@ function discoverIcons(
   });
 
   return icons.length > 0 ? Object.fromEntries(icons) : undefined;
-}
+};
 
-function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
+const addDevModeCsp = (manifest: Browser.runtime.Manifest): void => {
   let permissionUrl = wxt.server?.origin;
   if (permissionUrl) {
     const permissionUrlInstance = new URL(permissionUrl);
@@ -532,24 +532,24 @@ function addDevModeCsp(manifest: Browser.runtime.Manifest): void {
     extensionPagesCsp.toString();
   // @ts-expect-error: sandbox is not typed
   manifest.content_security_policy.sandbox = sandboxCsp.toString();
-}
+};
 
-function addDevModePermissions(manifest: Browser.runtime.Manifest) {
+const addDevModePermissions = (manifest: Browser.runtime.Manifest) => {
   // For reloading the page
   addPermission(manifest, 'tabs');
 
   // For registering content scripts
   if (wxt.config.manifestVersion === 3) addPermission(manifest, 'scripting');
-}
+};
 
 /**
  * Returns the bundle paths to CSS files associated with a list of content
  * scripts, or undefined if there is no associated CSS.
  */
-export function getContentScriptCssFiles(
+export const getContentScriptCssFiles = (
   contentScripts: ContentScriptEntrypoint[],
   contentScriptCssMap: Record<string, string | undefined>,
-): string[] | undefined {
+): string[] | undefined => {
   const css: string[] = [];
 
   contentScripts.forEach((script) => {
@@ -567,17 +567,17 @@ export function getContentScriptCssFiles(
 
   if (css.length > 0) return css;
   return undefined;
-}
+};
 
 /**
  * Content scripts configured with `cssInjectionMode: "ui"` need to add their
  * CSS files to web accessible resources so they can be fetched as text and
  * added to shadow roots that the UI is added to.
  */
-export function getContentScriptCssWebAccessibleResources(
+export const getContentScriptCssWebAccessibleResources = (
   contentScripts: ContentScriptEntrypoint[],
   contentScriptCssMap: Record<string, string | undefined>,
-): any[] {
+): any[] => {
   const resources: ManifestV3WebAccessibleResource[] = [];
 
   contentScripts.forEach((script) => {
@@ -602,16 +602,16 @@ export function getContentScriptCssWebAccessibleResources(
   });
 
   return resources;
-}
+};
 
 /**
  * Based on the build output, return a Record of each content script's name to
  * it CSS file if the script includes one.
  */
-export function getContentScriptsCssMap(
+export const getContentScriptsCssMap = (
   buildOutput: Omit<BuildOutput, 'manifest'>,
   scripts: ContentScriptEntrypoint[],
-) {
+) => {
   const map: Record<string, string | undefined> = {};
   const allChunks = buildOutput.steps.flatMap((step) => step.chunks);
   scripts.forEach((script) => {
@@ -621,23 +621,23 @@ export function getContentScriptsCssMap(
     if (relatedCss != null) map[script.name] = relatedCss.fileName;
   });
   return map;
-}
+};
 
-function addPermission(
+const addPermission = (
   manifest: Browser.runtime.Manifest,
   permission: string,
-): void {
+): void => {
   manifest.permissions ??= [];
   // @ts-expect-error: Allow using strings for permissions for MV2 support
   if (manifest.permissions.includes(permission)) return;
   // @ts-expect-error: Allow using strings for permissions for MV2 support
   manifest.permissions.push(permission);
-}
+};
 
-function addHostPermission(
+const addHostPermission = (
   manifest: Browser.runtime.Manifest,
   hostPermission: string,
-): void {
+): void => {
   // Chrome MV3 rejects file:// in host_permissions; access is controlled by
   // the "Allow access to File URLs" toggle instead.
   if (wxt.config.manifestVersion === 3 && hostPermission.startsWith('file:'))
@@ -647,19 +647,19 @@ function addHostPermission(
   if (manifest.host_permissions.includes(hostPermission)) return;
 
   manifest.host_permissions.push(hostPermission);
-}
+};
 
 /**
  * - "<all_urls>" → "<all_urls>"
  * - "_://play.google.com/books/_" → "_://play.google.com/_"
  */
-export function stripPathFromMatchPattern(pattern: string) {
+export const stripPathFromMatchPattern = (pattern: string) => {
   const protocolSepIndex = pattern.indexOf('://');
   if (protocolSepIndex === -1) return pattern;
 
   const startOfPath = pattern.indexOf('/', protocolSepIndex + 3);
   return pattern.substring(0, startOfPath) + '/*';
-}
+};
 
 /**
  * Converts all MV3 web accessible resources to their MV2 forms. MV3 web
@@ -667,9 +667,9 @@ export function stripPathFromMatchPattern(pattern: string) {
  * user in their manifest. In both cases, when targeting MV2, automatically
  * convert their definitions down to the basic MV2 array.
  */
-export function convertWebAccessibleResourcesToMv2(
+export const convertWebAccessibleResourcesToMv2 = (
   manifest: Browser.runtime.Manifest,
-): void {
+): void => {
   if (manifest.web_accessible_resources == null) return;
 
   manifest.web_accessible_resources = Array.from(
@@ -680,20 +680,20 @@ export function convertWebAccessibleResourcesToMv2(
       }),
     ),
   );
-}
+};
 
-function moveHostPermissionsToPermissions(
+const moveHostPermissionsToPermissions = (
   manifest: Browser.runtime.Manifest,
-): void {
+): void => {
   if (!manifest.host_permissions?.length) return;
 
   manifest.host_permissions.forEach((permission: string) =>
     addPermission(manifest, permission),
   );
   delete manifest.host_permissions;
-}
+};
 
-function convertActionToMv2(manifest: Browser.runtime.Manifest): void {
+const convertActionToMv2 = (manifest: Browser.runtime.Manifest): void => {
   if (
     manifest.action == null ||
     manifest.browser_action != null ||
@@ -702,9 +702,9 @@ function convertActionToMv2(manifest: Browser.runtime.Manifest): void {
     return;
 
   manifest.browser_action = manifest.action;
-}
+};
 
-function convertCspToMv2(manifest: Browser.runtime.Manifest): void {
+const convertCspToMv2 = (manifest: Browser.runtime.Manifest): void => {
   if (
     typeof manifest.content_security_policy === 'string' ||
     manifest.content_security_policy?.extension_pages == null
@@ -713,12 +713,12 @@ function convertCspToMv2(manifest: Browser.runtime.Manifest): void {
 
   manifest.content_security_policy =
     manifest.content_security_policy.extension_pages;
-}
+};
 
 /** Make sure all resources are in MV3 format. If not, add a warning. */
-function validateMv3WebAccessibleResources(
+const validateMv3WebAccessibleResources = (
   manifest: Browser.runtime.Manifest,
-): void {
+): void => {
   if (manifest.web_accessible_resources == null) return;
 
   const stringResources = manifest.web_accessible_resources.filter(
@@ -731,11 +731,11 @@ function validateMv3WebAccessibleResources(
       )}. When manually defining web_accessible_resources, define them as MV3 objects ({ matches: [...], resources: [...] }), and WXT will automatically convert them to MV2 when necessary.`,
     );
   }
-}
+};
 
 /** Remove keys from the manifest based on the build target. */
-function stripKeys(manifest: Browser.runtime.Manifest): void {
-  let keysToRemove: string[] = [];
+const stripKeys = (manifest: Browser.runtime.Manifest): void => {
+  const keysToRemove: string[] = [];
   if (wxt.config.manifestVersion === 2) {
     keysToRemove.push(...mv3OnlyKeys);
     if (wxt.config.browser === 'firefox')
@@ -749,7 +749,7 @@ function stripKeys(manifest: Browser.runtime.Manifest): void {
   keysToRemove.forEach((key) => {
     delete manifest[key as keyof Browser.runtime.Manifest];
   });
-}
+};
 
 const mv2OnlyKeys = [
   'browser_action',

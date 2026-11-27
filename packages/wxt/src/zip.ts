@@ -12,7 +12,7 @@ import { findEntrypoints } from './internal/find-entrypoints';
 import { internalBuild } from './internal/internal-build';
 import { getPackageJson } from './internal/package';
 import { registerWxt, wxt } from './internal/wxt';
-import { InlineConfig } from './types';
+import type { InlineConfig } from './types';
 
 /**
  * Build and zip the extension for distribution.
@@ -20,7 +20,7 @@ import { InlineConfig } from './types';
  * @param config Optional config that will override your `<root>/wxt.config.ts`.
  * @returns A list of all files included in the ZIP.
  */
-export async function zip(config?: InlineConfig): Promise<string[]> {
+export const zip = async (config?: InlineConfig): Promise<string[]> => {
   await registerWxt('build', config);
   const output = await internalBuild();
   await wxt.hooks.callHook('zip:start', wxt);
@@ -113,9 +113,9 @@ export async function zip(config?: InlineConfig): Promise<string[]> {
   await wxt.hooks.callHook('zip:done', wxt, zipFiles);
 
   return zipFiles;
-}
+};
 
-async function zipDir(
+const zipDir = async (
   directory: string,
   outputPath: string,
   options?: {
@@ -130,7 +130,7 @@ async function zipDir(
     additionalFiles?: string[];
     dot?: boolean;
   },
-): Promise<string[]> {
+): Promise<string[]> => {
   const archive = createZip({ level: wxt.config.zip.compressionLevel });
   // includeSources patterns are used directly (defaults to ['**/*'] from config)
   // excludeSources patterns are passed to glob's ignore option for efficient filtering
@@ -165,9 +165,9 @@ async function zipDir(
   await writeFile(outputPath, zipBuffer);
 
   return filesToZip;
-}
+};
 
-async function downloadPrivatePackages() {
+const downloadPrivatePackages = async () => {
   const overrides: Record<string, string> = {};
   const files: string[] = [];
 
@@ -194,13 +194,13 @@ async function downloadPrivatePackages() {
   }
 
   return { overrides, files };
-}
+};
 
-function addOverridesToPackageJson(
+const addOverridesToPackageJson = (
   absolutePackageJsonPath: string,
   content: string,
   overrides: Record<string, string>,
-): string {
+): string => {
   if (Object.keys(overrides).length === 0) return content;
 
   const packageJsonDir = path.dirname(absolutePackageJsonPath);
@@ -214,4 +214,4 @@ function addOverridesToPackageJson(
       'file://./' + normalizePath(path.relative(packageJsonDir, absolutePath));
   });
   return JSON.stringify(newPackage, null, 2);
-}
+};

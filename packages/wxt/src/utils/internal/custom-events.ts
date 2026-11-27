@@ -1,6 +1,14 @@
 import { browser } from 'wxt/browser';
 
 /**
+ * Returns an event name unique to the extension and content script that's
+ * running.
+ */
+export const getUniqueEventName = (eventName: string): string => {
+  return `${browser?.runtime?.id}:${import.meta.env.ENTRYPOINT}:${eventName}`;
+};
+
+/**
  * Fired on `window` as `wxt:locationchange` when a content script detects a
  * same-document URL change.
  */
@@ -15,12 +23,4 @@ export class WxtLocationChangeEvent extends Event {
   ) {
     super(WxtLocationChangeEvent.EVENT_NAME, {});
   }
-}
-
-/**
- * Returns an event name unique to the extension and content script that's
- * running.
- */
-export function getUniqueEventName(eventName: string): string {
-  return `${browser?.runtime?.id}:${import.meta.env.ENTRYPOINT}:${eventName}`;
 }

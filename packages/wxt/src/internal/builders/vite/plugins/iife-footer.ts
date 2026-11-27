@@ -7,7 +7,7 @@ import type { Plugin } from 'vite';
  * `build.rollupOptions.output.footer` See
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/scripting/executeScript#return_value
  */
-export function iifeFooter(iifeReturnValueName: string): Plugin {
+export const iifeFooter = (iifeReturnValueName: string): Plugin => {
   return {
     name: 'wxt:iife-footer',
     generateBundle(_, bundle) {
@@ -31,4 +31,4 @@ export function iifeFooter(iifeReturnValueName: string): Plugin {
       }
     },
   };
-}
+};

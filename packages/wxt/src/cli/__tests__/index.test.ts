@@ -26,13 +26,13 @@ consola.wrapConsole();
 
 const ogArgv = process.argv;
 
-function mockArgv(...args: string[]) {
+const mockArgv = (...args: string[]) => {
   process.argv = ['/bin/node', 'bin/wxt.mjs', ...args];
-}
+};
 
-async function importCli() {
+const importCli = async () => {
   await import('..');
-}
+};
 
 describe('CLI', () => {
   beforeEach(() => {

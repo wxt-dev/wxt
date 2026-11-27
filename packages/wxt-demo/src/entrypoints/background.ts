@@ -44,7 +44,7 @@ export default defineBackground({
   },
 });
 
-function _otherTypeChecksNotEvaluated() {
+const _otherTypeChecksNotEvaluated = () => {
   browser.scripting.executeScript({
     target: { tabId: 1 },
     files: [
@@ -53,4 +53,4 @@ function _otherTypeChecksNotEvaluated() {
       '/other.js',
     ],
   });
-}
+};

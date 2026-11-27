@@ -9,9 +9,9 @@ import type { WxtAppConfig } from './define-app-config';
  *
  * @see https://wxt.dev/guide/essentials/config/runtime.html
  */
-export function getAppConfig(): WxtAppConfig {
+export const getAppConfig = (): WxtAppConfig => {
   return appConfig;
-}
+};
 
 /**
  * Alias for {@link getAppConfig}.
@@ -19,7 +19,7 @@ export function getAppConfig(): WxtAppConfig {
  * @deprecated Use {@link getAppConfig} instead. Same function, different name.
  * @see https://wxt.dev/guide/essentials/config/runtime.html
  */
-export function useAppConfig(): WxtAppConfig {
+export const useAppConfig = (): WxtAppConfig => {
   // After v1.0 this function will be removed, and migrate to use only `getAppConfig` instead.
   if (import.meta.env.DEV) {
     console.warn(
@@ -28,4 +28,4 @@ export function useAppConfig(): WxtAppConfig {
   }
 
   return getAppConfig();
-}
+};

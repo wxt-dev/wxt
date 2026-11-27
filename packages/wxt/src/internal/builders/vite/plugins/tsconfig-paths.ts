@@ -1,8 +1,8 @@
 import type * as vite from 'vite';
 
-import { ResolvedConfig } from '../../../../types';
+import type { ResolvedConfig } from '../../../../types';
 
-export function tsconfigPaths(config: ResolvedConfig): vite.Plugin {
+export const tsconfigPaths = (config: ResolvedConfig): vite.Plugin => {
   return {
     name: 'wxt:aliases',
     async config() {
@@ -13,4 +13,4 @@ export function tsconfigPaths(config: ResolvedConfig): vite.Plugin {
       };
     },
   };
-}
+};

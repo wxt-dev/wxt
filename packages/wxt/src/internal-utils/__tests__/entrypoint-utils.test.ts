@@ -2,7 +2,7 @@ import { resolve } from 'path';
 
 import { describe, it, expect } from 'vitest';
 
-import { Entrypoint } from '../../types';
+import type { Entrypoint } from '../../types';
 import {
   getEntrypointName,
   getEntrypointOutputFile,

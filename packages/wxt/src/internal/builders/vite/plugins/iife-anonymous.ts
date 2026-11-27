@@ -1,6 +1,6 @@
 import type { Plugin } from 'vite';
 
-export function iifeAnonymous(iifeReturnValueName: string): Plugin {
+export const iifeAnonymous = (iifeReturnValueName: string): Plugin => {
   return {
     name: 'wxt:iife-anonymous',
     generateBundle(_, bundle) {
@@ -14,4 +14,4 @@ export function iifeAnonymous(iifeReturnValueName: string): Plugin {
       }
     },
   };
-}
+};

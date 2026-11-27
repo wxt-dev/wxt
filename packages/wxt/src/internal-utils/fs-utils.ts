@@ -1,17 +1,17 @@
 import { access, readFile, writeFile } from 'node:fs/promises';
 
-export async function pathExists(path: string): Promise<boolean> {
+export const pathExists = async (path: string): Promise<boolean> => {
   try {
     await access(path);
     return true;
   } catch {
     return false;
   }
-}
+};
 
-export async function readJson<T = any>(path: string): Promise<T> {
+export const readJson = async <T = any>(path: string): Promise<T> => {
   return JSON.parse(await readFile(path, 'utf-8'));
-}
+};
 
 /**
  * Only write the contents to a file if it results in a change. This prevents
@@ -21,19 +21,19 @@ export async function readJson<T = any>(path: string): Promise<T> {
  * @param file The file to write to.
  * @param newContents The new text content to write.
  */
-export async function writeFileIfDifferent(
+export const writeFileIfDifferent = async (
   file: string,
   newContents: string,
-): Promise<void> {
+): Promise<void> => {
   const existingContents = await readFile(file, 'utf-8').catch(() => undefined);
 
   if (existingContents !== newContents) {
     await writeFile(file, newContents);
   }
-}
+};
 
-export function getBytesDisplay(bytes: number): string {
+export const getBytesDisplay = (bytes: number): string => {
   if (bytes < 1000) return `${bytes} B`;
   if (bytes < 999995) return `${(bytes / 1e3).toFixed(2)} kB`;
   return `${(bytes / 1e6).toFixed(2)} MB`;
-}
+};

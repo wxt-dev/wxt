@@ -1,5 +1,5 @@
-import { UserConfig } from './types';
+import type { UserConfig } from './types';
 
-export function defineConfig(config: UserConfig): UserConfig {
+export const defineConfig = (config: UserConfig): UserConfig => {
   return config;
-}
+};

@@ -1,6 +1,6 @@
 import type { Browser } from '@wxt-dev/browser';
 
-import { BuildOutput, Entrypoint, EntrypointGroup } from '../types';
+import type { BuildOutput, Entrypoint, EntrypointGroup } from '../types';
 import { buildEntrypoints } from './build-entrypoints';
 import { generateWxtDir } from './generate-wxt-dir';
 import { generateManifest, writeManifest } from './manifest';
@@ -25,7 +25,7 @@ import { wxt } from './wxt';
  * @param existingOutput The previous output to combine the rebuild results
  *   into. An empty array if this is the first build.
  */
-export async function rebuild(
+export const rebuild = async (
   allEntrypoints: Entrypoint[],
   entrypointGroups: EntrypointGroup[],
   existingOutput: Omit<BuildOutput, 'manifest'> = {
@@ -36,7 +36,7 @@ export async function rebuild(
   output: BuildOutput;
   manifest: Browser.runtime.Manifest;
   warnings: any[][];
-}> {
+}> => {
   const spinner = createSpinner('Preparing...').start();
 
   // Update types directory with new files and types
@@ -73,4 +73,4 @@ export async function rebuild(
     manifest: newManifest,
     warnings: manifestWarnings,
   };
-}
+};

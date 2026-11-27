@@ -6,10 +6,10 @@ import type { ResolvedConfig, WxtDevServer } from '../../../../types';
  * Defines global constants about the dev server. Helps scripts connect to the
  * server's web socket.
  */
-export function devServerGlobals(
+export const devServerGlobals = (
   config: ResolvedConfig,
   server: WxtDevServer | undefined,
-): Plugin {
+): Plugin => {
   return {
     name: 'wxt:dev-server-globals',
     config() {
@@ -24,4 +24,4 @@ export function devServerGlobals(
       };
     },
   };
-}
+};

@@ -9,15 +9,15 @@ import { x as spawn } from 'tinyexec';
 
 import { pathExists } from './internal-utils/fs-utils';
 import { normalizePath } from './internal-utils/path-utils';
-import { TextStyle } from './internal-utils/type-utils';
+import type { TextStyle } from './internal-utils/type-utils';
 import { createSpinner } from './internal/spinner';
 
-export async function initialize(options: {
+export const initialize = async (options: {
   directory?: string;
   template?: string;
   packageManager?: string;
   requireGit?: boolean;
-}) {
+}) => {
   consola.info('Initializing new project');
 
   const templates = await listTemplates();
@@ -93,7 +93,7 @@ export async function initialize(options: {
   consola.log(`  ${++step}.`, styleText('cyan', `${packageManager} install`));
 
   console.log();
-}
+};
 
 interface Template {
   /** Template's name. */
@@ -102,7 +102,7 @@ interface Template {
   path: string;
 }
 
-async function listTemplates(): Promise<Template[]> {
+const listTemplates = async (): Promise<Template[]> => {
   const templates = await listTemplatesUngh().catch((err) => {
     consola.debug('Failed to load templates via ungh:', err);
     return listTemplatesGithub();
@@ -114,9 +114,9 @@ async function listTemplates(): Promise<Template[]> {
     if (diff !== 0) return diff;
     return l.name.localeCompare(r.name);
   });
-}
+};
 
-async function listTemplatesUngh(): Promise<Template[]> {
+const listTemplatesUngh = async (): Promise<Template[]> => {
   const res = await fetch('https://ungh.cc/repos/wxt-dev/wxt/files/main');
   if (res.status !== 200)
     throw Error(
@@ -138,9 +138,9 @@ async function listTemplatesUngh(): Promise<Template[]> {
     .map((item) => item.path.match(/templates\/(.+)\/package\.json/)?.[1])
     .filter((name) => name != null)
     .map((name) => ({ name: name!, path: `templates/${name}` }));
-}
+};
 
-async function listTemplatesGithub(): Promise<Template[]> {
+const listTemplatesGithub = async (): Promise<Template[]> => {
   const res = await fetch(
     `https://api.github.com/repos/${REPO}/contents/templates`,
     {
@@ -159,9 +159,9 @@ async function listTemplatesGithub(): Promise<Template[]> {
     sha: string;
     size: number;
   }>;
-}
+};
 
-async function cloneProject({
+const cloneProject = async ({
   directory,
   template,
   requireGitInitialized,
@@ -169,7 +169,7 @@ async function cloneProject({
   directory: string;
   template: Template;
   requireGitInitialized: boolean;
-}) {
+}) => {
   const spinner = createSpinner('Downloading template').start();
   try {
     // 1. Clone repo
@@ -204,7 +204,7 @@ async function cloneProject({
     spinner.error();
     throw Error(`Failed to setup new project: ${JSON.stringify(err, null, 2)}`);
   }
-}
+};
 
 const TEMPLATE_COLORS: Record<string, TextStyle> = {
   vanilla: 'blue',

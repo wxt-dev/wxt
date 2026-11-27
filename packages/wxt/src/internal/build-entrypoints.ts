@@ -3,7 +3,7 @@ import { styleText } from 'node:util';
 import { dirname, resolve } from 'path';
 
 import { toArray } from '../internal-utils/array-utils';
-import {
+import type {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
@@ -13,10 +13,10 @@ import { getPublicFiles } from './get-public-files';
 import type { Spinner } from './spinner';
 import { wxt } from './wxt';
 
-export async function buildEntrypoints(
+export const buildEntrypoints = async (
   groups: EntrypointGroup[],
   spinner: Spinner,
-): Promise<Omit<BuildOutput, 'manifest'>> {
+): Promise<Omit<BuildOutput, 'manifest'>> => {
   const steps: BuildStepOutput[] = [];
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
@@ -39,9 +39,9 @@ export async function buildEntrypoints(
   const publicAssets = await copyPublicDirectory();
 
   return { publicAssets, steps };
-}
+};
 
-async function copyPublicDirectory(): Promise<BuildOutput['publicAssets']> {
+const copyPublicDirectory = async (): Promise<BuildOutput['publicAssets']> => {
   const files = (await getPublicFiles()).map<ResolvedPublicFile>((file) => ({
     absoluteSrc: resolve(wxt.config.publicDir, file),
     relativeDest: file,
@@ -66,4 +66,4 @@ async function copyPublicDirectory(): Promise<BuildOutput['publicAssets']> {
   }
 
   return publicAssets;
-}
+};

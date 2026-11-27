@@ -1,11 +1,11 @@
 import { withFirstModule } from '../internal-utils/module-utils';
-import { ExtensionRunner, ResolvedConfig } from '../types';
+import type { ExtensionRunner, ResolvedConfig } from '../types';
 import { ManualRunner } from './runners/manual';
 import { WebExtRunner } from './runners/web-ext';
 
-export async function detectRunner(
+export const detectRunner = async (
   config: ResolvedConfig,
-): Promise<ExtensionRunner> {
+): Promise<ExtensionRunner> => {
   return withFirstModule(
     async () => {
       const webExt = await import('web-ext').then((mod) => mod.default);
@@ -14,4 +14,4 @@ export async function detectRunner(
     },
     () => new ManualRunner(config),
   );
-}
+};

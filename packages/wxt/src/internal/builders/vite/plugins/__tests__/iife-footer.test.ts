@@ -15,12 +15,12 @@ interface OutputAsset {
 
 type OutputBundle = Record<string, OutputChunk | OutputAsset>;
 
-function dedent(code: string) {
+const dedent = (code: string) => {
   const lines = code.trim().split('\n');
   return lines.map((line) => line.trimStart()).join('\n');
-}
+};
 
-function createBundle(code: string): OutputBundle {
+const createBundle = (code: string): OutputBundle => {
   return {
     'entry.js': {
       type: 'chunk',
@@ -28,9 +28,9 @@ function createBundle(code: string): OutputBundle {
       isEntry: true,
     },
   };
-}
+};
 
-function getCode(bundle: OutputBundle): string {
+const getCode = (bundle: OutputBundle): string => {
   const entry = bundle['entry.js'];
 
   if (entry.type !== 'chunk') {
@@ -38,13 +38,13 @@ function getCode(bundle: OutputBundle): string {
   }
 
   return entry.code;
-}
+};
 
-function runPlugin(name: string, bundle: OutputBundle) {
+const runPlugin = (name: string, bundle: OutputBundle) => {
   const plugin = iifeFooter(name);
   // @ts-expect-error -- calling the hook directly
   plugin.generateBundle(undefined, bundle);
-}
+};
 
 describe('IIFE return value plugin', () => {
   it('should append return value when no sourcemap comment', () => {

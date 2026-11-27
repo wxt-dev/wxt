@@ -4,8 +4,8 @@ import { consola } from 'consola';
 
 import { version } from '../../version';
 
-export function printHeader() {
+export const printHeader = () => {
   consola.log(
     `\n${styleText('gray', 'WXT')} ${styleText(['bold', 'gray'], version)}`,
   );
-}
+};

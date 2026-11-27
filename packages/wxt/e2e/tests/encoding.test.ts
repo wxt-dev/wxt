@@ -10,7 +10,7 @@ describe('Encoding', () => {
   const KNOWN_BAD_CHAR = '￿';
   const ESCAPED_BAD_CHAR = '\\uffff';
 
-  async function buildWithBadChar(escapeUnicode: boolean): Promise<string> {
+  const buildWithBadChar = async (escapeUnicode: boolean): Promise<string> => {
     const project = new TestProject();
 
     // `project.addFile` writes the file as UTF8
@@ -26,7 +26,7 @@ describe('Encoding', () => {
 
     const file = project.resolvePath('.output/chrome-mv3/example.js');
     return await readFile(file, 'ascii');
-  }
+  };
 
   it('should convert unicode characters to ascii escaped chars when experimental.escapeUnicode=true', async () => {
     const output = await buildWithBadChar(true);

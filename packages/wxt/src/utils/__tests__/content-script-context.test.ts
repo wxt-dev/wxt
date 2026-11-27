@@ -10,9 +10,9 @@ import { ContentScriptContext } from '../content-script-context';
  * tick of the event loop. So waiting a timeout of 0 will ensure they've been
  * fired.
  */
-function waitForEventsToFire() {
+const waitForEventsToFire = () => {
   return new Promise((res) => setTimeout(res));
-}
+};
 
 describe('Content Script Context', () => {
   beforeEach(() => {

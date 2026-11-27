@@ -1,7 +1,7 @@
 import readline from 'node:readline';
 import { styleText } from 'node:util';
 
-import { WxtDevServer } from '../types';
+import type { WxtDevServer } from '../types';
 import { wxt } from './wxt';
 
 export interface KeyboardShortcutWatcher {
@@ -11,9 +11,9 @@ export interface KeyboardShortcutWatcher {
 }
 
 /** Function that creates a keyboard shortcut handler for the extension. */
-export function createKeyboardShortcuts(
+export const createKeyboardShortcuts = (
   server: WxtDevServer,
-): KeyboardShortcutWatcher {
+): KeyboardShortcutWatcher => {
   let rl: readline.Interface | undefined;
 
   const handleInput = (line: string) => {
@@ -49,4 +49,4 @@ export function createKeyboardShortcuts(
       }
     },
   };
-}
+};

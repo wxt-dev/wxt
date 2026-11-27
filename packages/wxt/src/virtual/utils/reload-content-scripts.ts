@@ -4,25 +4,25 @@ import { MatchPattern } from 'wxt/utils/match-patterns';
 import type { ReloadContentScriptPayload } from '../../utils/internal/dev-server-websocket';
 import { logger } from '../../utils/internal/logger';
 
-export function reloadContentScript(payload: ReloadContentScriptPayload) {
+export const reloadContentScript = (payload: ReloadContentScriptPayload) => {
   const manifest = browser.runtime.getManifest();
   if (manifest.manifest_version == 2) {
     void reloadContentScriptMv2(payload);
   } else {
     void reloadContentScriptMv3(payload);
   }
-}
+};
 
-export async function reloadContentScriptMv3({
+export const reloadContentScriptMv3 = async ({
   registration,
   contentScript,
-}: ReloadContentScriptPayload) {
+}: ReloadContentScriptPayload) => {
   if (registration === 'runtime') {
     await reloadRuntimeContentScriptMv3(contentScript);
   } else {
     await reloadManifestContentScriptMv3(contentScript);
   }
-}
+};
 
 type ContentScript = ReloadContentScriptPayload['contentScript'];
 
@@ -33,9 +33,9 @@ type ContentScript = ReloadContentScriptPayload['contentScript'];
  */
 const manifestReloads = new Map<string, Promise<void>>();
 
-export async function reloadManifestContentScriptMv3(
+export const reloadManifestContentScriptMv3 = async (
   contentScript: ContentScript,
-) {
+) => {
   const id = `wxt:${contentScript.js![0]}`;
   const previous = manifestReloads.get(id) ?? Promise.resolve();
   const reload = previous.then(() =>
@@ -46,12 +46,12 @@ export async function reloadManifestContentScriptMv3(
     reload.catch(() => {}),
   );
   return reload;
-}
+};
 
-async function reloadManifestContentScriptNow(
+const reloadManifestContentScriptNow = async (
   id: string,
   contentScript: ContentScript,
-) {
+) => {
   logger.log('Reloading content script:', contentScript);
   const registered = await browser.scripting.getRegisteredContentScripts();
   logger.debug('Existing scripts:', registered);
@@ -79,11 +79,11 @@ async function reloadManifestContentScriptNow(
   }
 
   await reloadTabsForContentScript(contentScript);
-}
+};
 
-export async function reloadRuntimeContentScriptMv3(
+export const reloadRuntimeContentScriptMv3 = async (
   contentScript: ContentScript,
-) {
+) => {
   logger.log('Reloading content script:', contentScript);
   const registered = await browser.scripting.getRegisteredContentScripts();
   logger.debug('Existing scripts:', registered);
@@ -104,9 +104,9 @@ export async function reloadRuntimeContentScriptMv3(
 
   await browser.scripting.updateContentScripts(matches);
   await reloadTabsForContentScript(contentScript);
-}
+};
 
-async function reloadTabsForContentScript(contentScript: ContentScript) {
+const reloadTabsForContentScript = async (contentScript: ContentScript) => {
   const allTabs = await browser.tabs.query({});
   const matchPatterns = contentScript.matches.map(
     (match) => new MatchPattern(match),
@@ -125,10 +125,10 @@ async function reloadTabsForContentScript(contentScript: ContentScript) {
       }
     }),
   );
-}
+};
 
-export async function reloadContentScriptMv2(
+export const reloadContentScriptMv2 = async (
   _payload: ReloadContentScriptPayload,
-) {
+) => {
   throw Error('TODO: reloadContentScriptMv2');
-}
+};

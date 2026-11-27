@@ -1,4 +1,4 @@
-import { ContentScriptContext } from '../content-script-context';
+import type { ContentScriptContext } from '../content-script-context';
 import { WxtLocationChangeEvent } from './custom-events';
 
 const supportsNavigationApi =
@@ -9,7 +9,7 @@ const supportsNavigationApi =
  * detected. Stops watching when content script is invalidated. Uses Navigation
  * API when available, otherwise falls back to polling.
  */
-export function createLocationWatcher(ctx: ContentScriptContext) {
+export const createLocationWatcher = (ctx: ContentScriptContext) => {
   let lastUrl: URL;
   let watching = false;
 
@@ -45,4 +45,4 @@ export function createLocationWatcher(ctx: ContentScriptContext) {
       }
     },
   };
-}
+};

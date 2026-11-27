@@ -1,6 +1,6 @@
 import { internalBuild } from './internal/internal-build';
 import { registerWxt } from './internal/wxt';
-import { BuildOutput, InlineConfig } from './types';
+import type { BuildOutput, InlineConfig } from './types';
 
 /**
  * Bundles the extension for production. Returns a promise of the build result.
@@ -16,8 +16,8 @@ import { BuildOutput, InlineConfig } from './types';
  *     // Override config...
  *   });
  */
-export async function build(config?: InlineConfig): Promise<BuildOutput> {
+export const build = async (config?: InlineConfig): Promise<BuildOutput> => {
   await registerWxt('build', config);
 
   return await internalBuild();
-}
+};

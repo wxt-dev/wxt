@@ -1,4 +1,17 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "ignorePatterns": ["src/internal/__tests__/test-entrypoints", "inline"],
+  "rules": {
+    "func-style": ["error", "expression"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "typescript/consistent-type-imports": [
+      "error",
+      {
+        "disallowTypeAnnotations": false,
+        "prefer": "type-imports",
+        "fixStyle": "separate-type-imports",
+      },
+    ],
+  },
 }

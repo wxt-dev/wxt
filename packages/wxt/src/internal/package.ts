@@ -8,9 +8,9 @@ import { wxt } from './wxt';
  *
  * TODO: look in root and up directories until it's found
  */
-export async function getPackageJson(): Promise<
+export const getPackageJson = async (): Promise<
   Partial<Record<string, any>> | undefined
-> {
+> => {
   const file = resolve(wxt.config.root, 'package.json');
   try {
     return await readJson(file);
@@ -21,4 +21,4 @@ export async function getPackageJson(): Promise<
     );
     return {};
   }
-}
+};

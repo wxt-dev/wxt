@@ -2,7 +2,13 @@ import { relative } from 'path';
 
 import { createHooks } from 'hookable';
 
-import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
+import type {
+  InlineConfig,
+  Wxt,
+  WxtCommand,
+  WxtHooks,
+  WxtModule,
+} from '../types';
 import { builtinModules } from './builtin-modules';
 import { detectBuilder } from './detect-builder';
 import { detectRunner } from './detect-runner';
@@ -21,10 +27,10 @@ export let wxt: Wxt;
  * Create and register a global instance of the `Wxt` interface for use
  * throughout the project.
  */
-export async function registerWxt(
+export const registerWxt = async (
   command: WxtCommand,
   inlineConfig: InlineConfig = {},
-): Promise<void> {
+): Promise<void> => {
   // Default NODE_ENV environment variable before other packages, like vite, do it
   // See https://github.com/wxt-dev/wxt/issues/873#issuecomment-2254555523
   process.env.NODE_ENV ??=
@@ -77,9 +83,9 @@ export async function registerWxt(
   };
 
   await initWxtModules();
-}
+};
 
-export async function initWxtModules() {
+export const initWxtModules = async () => {
   // Call setup function and add hooks
   for (const mod of builtinModules) await initWxtModule(mod);
   for (const mod of wxt.config.userModules) await initWxtModule(mod);
@@ -104,21 +110,21 @@ export async function initWxtModules() {
 
   await wxt.hooks.callHook('ready', wxt);
   await wxt.hooks.callHook('config:resolved', wxt);
-}
+};
 
-async function initWxtModule(module: WxtModule<any>): Promise<void> {
+const initWxtModule = async (module: WxtModule<any>): Promise<void> => {
   if (module.hooks) wxt.hooks.addHooks(module.hooks);
   await module.setup?.(
     wxt,
     // @ts-expect-error: Untyped configKey field
     module.configKey ? wxt.config[module.configKey] : undefined,
   );
-}
+};
 
 /** Unloads WXT modules. */
-export function deinitWxtModules(): void {
+export const deinitWxtModules = (): void => {
   wxt.hooks.removeAllHooks();
-}
+};
 
 /**
  * @example
@@ -128,6 +134,6 @@ export function deinitWxtModules(): void {
  *
  * @internal ONLY USE FOR TESTING.
  */
-export function setWxtForTesting(testInstance: Wxt) {
+export const setWxtForTesting = (testInstance: Wxt) => {
   wxt = testInstance;
-}
+};

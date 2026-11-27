@@ -5,24 +5,24 @@ import { ContentScriptContext } from '../../content-script-context';
 import { createIframeUi } from '../iframe';
 import { createIntegratedUi } from '../integrated';
 import { createShadowRootUi } from '../shadow-root';
-import { ContentScriptUi } from '../types';
+import type { ContentScriptUi } from '../types';
 
 /** Util for floating promise. */
-async function runMicrotasks() {
+const runMicrotasks = async () => {
   return await new Promise((resolve) => setTimeout(resolve, 0));
-}
+};
 
-function appendTestApp(container: HTMLElement) {
+const appendTestApp = (container: HTMLElement) => {
   container.innerHTML = '<app>Hello world</app>';
-}
+};
 
-function appendTestElement({
+const appendTestElement = ({
   tagName = 'div',
   id,
 }: {
   tagName?: string;
   id: string;
-}) {
+}) => {
   const parent = document.querySelector('#parent');
   if (!parent) {
     throw Error(
@@ -33,7 +33,7 @@ function appendTestElement({
   element.id = id;
   parent.append(element);
   return element;
-}
+};
 
 const fetch = vi.fn();
 

@@ -17,11 +17,11 @@ export interface ExecResult {
  * Run a command and wait for it to finish. Rejects if the command can't be
  * started or exits with a non-zero code.
  */
-export function exec(
+export const exec = (
   command: string,
   args: string[] = [],
   options: ExecOptions = {},
-): Promise<ExecResult> {
+): Promise<ExecResult> => {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
       cwd: options.cwd,
@@ -47,13 +47,13 @@ export function exec(
       );
     });
   });
-}
+};
 
 /** Extract a ZIP file into `outDir`. */
-export async function unzip(zipPath: string, outDir: string): Promise<void> {
+export const unzip = async (zipPath: string, outDir: string): Promise<void> => {
   await mkdir(outDir, { recursive: true });
   // `tar` ships with Windows and can read ZIPs, `unzip` is on Linux and macOS
   if (process.platform === 'win32')
     await exec('tar', ['-xf', zipPath, '-C', outDir]);
   else await exec('unzip', ['-q', '-o', zipPath, '-d', outDir]);
-}
+};

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { EslintConfigVersion } from '../../src';
+import type { EslintConfigVersion } from '../../src';
 import { TestProject } from '../utils';
 
 describe('Auto Imports', () => {
@@ -368,10 +368,10 @@ describe('Auto Imports', () => {
     });
 
     describe('Actual linting results', () => {
-      async function runEslint(
+      const runEslint = async (
         project: TestProject,
         enabled: EslintConfigVersion,
-      ) {
+      ) => {
         project.addFile(
           'entrypoints/background.js',
           `export default defineBackground(() => {})`,
@@ -387,7 +387,7 @@ describe('Auto Imports', () => {
           'eslint',
           'entrypoints/background.js',
         );
-      }
+      };
 
       describe('ESLint 9', () => {
         it('should have lint errors when not extending generated config', async () => {

@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import { x as spawn } from 'tinyexec';
 
-import { Dependency } from '../../types';
-import { WxtPackageManagerImpl } from './types';
+import type { Dependency } from '../../types';
+import type { WxtPackageManagerImpl } from './types';
 
 export const npm: WxtPackageManagerImpl = {
   overridesKey: 'overrides',
@@ -32,7 +32,9 @@ export const npm: WxtPackageManagerImpl = {
   },
 };
 
-export function flattenNpmListOutput(projects: NpmListProject[]): Dependency[] {
+export const flattenNpmListOutput = (
+  projects: NpmListProject[],
+): Dependency[] => {
   const queue: Record<string, NpmListDependency>[] = projects.flatMap(
     (project) => {
       const acc: Record<string, NpmListDependency>[] = [];
@@ -53,9 +55,11 @@ export function flattenNpmListOutput(projects: NpmListProject[]): Dependency[] {
     });
   }
   return dedupeDependencies(dependencies);
-}
+};
 
-export function dedupeDependencies(dependencies: Dependency[]): Dependency[] {
+export const dedupeDependencies = (
+  dependencies: Dependency[],
+): Dependency[] => {
   const hashes = new Set<string>();
   return dependencies.filter((dep) => {
     const hash = `${dep.name}@${dep.version}`;
@@ -66,7 +70,7 @@ export function dedupeDependencies(dependencies: Dependency[]): Dependency[] {
       return true;
     }
   });
-}
+};
 
 export interface NpmListProject {
   name: string;

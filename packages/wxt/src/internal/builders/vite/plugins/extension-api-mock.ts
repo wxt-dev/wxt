@@ -6,7 +6,7 @@ import { virtualModules } from '../../../../internal-utils/virtual-modules';
  * Mock `wxt/browser` and stub the global `browser`/`chrome` types with a fake
  * version of the extension APIs
  */
-export function extensionApiMock(): vite.PluginOption {
+export const extensionApiMock = (): vite.PluginOption => {
   const virtualSetupModule = 'virtual:wxt-setup';
   const resolvedVirtualSetupModule = '\0' + virtualSetupModule;
   const virtualMockBrowser = 'virtual:wxt-mock-browser';
@@ -55,7 +55,7 @@ export function extensionApiMock(): vite.PluginOption {
       },
     },
   };
-}
+};
 
 const setupTemplate = `
   import { vi } from 'vitest';

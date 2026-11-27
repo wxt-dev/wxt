@@ -1,7 +1,7 @@
 import { mkdir, readdir, rename, rmdir, stat } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 
-import { Hookable } from 'hookable';
+import type { Hookable } from 'hookable';
 import type * as vite from 'vite';
 
 import { toArray } from '../../../internal-utils/array-utils';
@@ -11,7 +11,7 @@ import {
 } from '../../../internal-utils/entrypoint-utils';
 import { normalizePath } from '../../../internal-utils/path-utils';
 import { safeVarName } from '../../../internal-utils/string-utils';
-import {
+import type {
   BuildStepOutput,
   Entrypoint,
   EntrypointGroup,
@@ -23,7 +23,10 @@ import {
   WxtHooks,
 } from '../../../types';
 import { createExtensionEnvironment } from '../../environments';
-import { VirtualEntrypointType, VirtualModuleId } from '../../virtual-modules';
+import type {
+  VirtualEntrypointType,
+  VirtualModuleId,
+} from '../../virtual-modules';
 import * as wxtPlugins from './plugins';
 
 interface RollupAssetNameInfo {
@@ -430,9 +433,9 @@ export class ViteBuilder implements WxtBuilder {
   }
 }
 
-export function getRunnerProfileWatchIgnores(
+export const getRunnerProfileWatchIgnores = (
   wxtConfig: ResolvedConfig,
-): string[] {
+): string[] => {
   const root = normalizePath(wxtConfig.root);
   const chromiumArgProfiles = extractPathArgs(
     wxtConfig.webExt.config?.chromiumArgs,
@@ -458,9 +461,12 @@ export function getRunnerProfileWatchIgnores(
         .map((profilePath) => `${profilePath}/**`),
     ),
   );
-}
+};
 
-function extractPathArgs(args: string[] | undefined, flag: string): string[] {
+const extractPathArgs = (
+  args: string[] | undefined,
+  flag: string,
+): string[] => {
   if (!args?.length) return [];
 
   const paths: string[] = [];
@@ -481,26 +487,26 @@ function extractPathArgs(args: string[] | undefined, flag: string): string[] {
   }
 
   return paths;
-}
+};
 
-function getRollupAssetNames(assetInfo: RollupAssetNameInfo): string[] {
+const getRollupAssetNames = (assetInfo: RollupAssetNameInfo): string[] => {
   if (Array.isArray(assetInfo.names)) return assetInfo.names;
   return assetInfo.name ? [assetInfo.name] : [];
-}
+};
 
-function getBuildOutputChunks(
+const getBuildOutputChunks = (
   result: Awaited<ReturnType<typeof vite.build>>,
-): BuildStepOutput['chunks'] {
+): BuildStepOutput['chunks'] => {
   if ('on' in result) throw Error('wxt does not support vite watch mode.');
   if (Array.isArray(result)) return result.flatMap(({ output }) => output);
   return result.output;
-}
+};
 
 /**
  * Returns the input module ID (virtual or real file) for an entrypoint. The
  * returned string should be passed as an input to rollup.
  */
-function getRollupEntry(entrypoint: Entrypoint): string {
+const getRollupEntry = (entrypoint: Entrypoint): string => {
   let virtualEntrypointType: VirtualEntrypointType | undefined;
   switch (entrypoint.type) {
     case 'background':
@@ -520,7 +526,7 @@ function getRollupEntry(entrypoint: Entrypoint): string {
     return `${moduleId}?${entrypoint.inputPath}`;
   }
   return entrypoint.inputPath;
-}
+};
 
 /**
  * Ensures the HTML files output by a multi-page build are in the correct
@@ -535,11 +541,11 @@ function getRollupEntry(entrypoint: Entrypoint): string {
  * need to be modified. HTML files access them via absolute URLs, so we don't
  * need to update any import paths in the HTML files either.
  */
-async function moveHtmlFiles(
+const moveHtmlFiles = async (
   config: ResolvedConfig,
   group: EntrypointGroup,
   chunks: BuildStepOutput['chunks'],
-): Promise<BuildStepOutput['chunks']> {
+): Promise<BuildStepOutput['chunks']> => {
   if (!Array.isArray(group)) return chunks;
 
   const entryMap = group.reduce<Record<string, Entrypoint>>((map, entry) => {
@@ -575,10 +581,10 @@ async function moveHtmlFiles(
   await removeEmptyDirs(config.outDir);
 
   return movedChunks;
-}
+};
 
 /** Recursively remove all directories that are empty/ */
-export async function removeEmptyDirs(dir: string): Promise<void> {
+export const removeEmptyDirs = async (dir: string): Promise<void> => {
   const files = await readdir(dir);
   for (const file of files) {
     const filePath = join(dir, file);
@@ -602,8 +608,8 @@ export async function removeEmptyDirs(dir: string): Promise<void> {
   } catch {
     // noop on failure - this means the directory was not empty.
   }
-}
+};
 
-function isRolldownVersion(version: string): boolean {
+const isRolldownVersion = (version: string): boolean => {
   return Number(version.split('.')[0]) >= 8;
-}
+};

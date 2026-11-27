@@ -162,7 +162,7 @@ describe('Module Helpers', () => {
   });
 
   describe('addWxtPlugin', () => {
-    function addPluginModule(project: TestProject) {
+    const addPluginModule = (project: TestProject) => {
       const expectedText = 'Hello from plugin!';
       const pluginPath = project.addFile(
         'modules/test/client-plugin.ts',
@@ -183,7 +183,7 @@ describe('Module Helpers', () => {
         `,
       );
       return expectedText;
-    }
+    };
 
     it('should include the plugin in the background', async () => {
       const project = new TestProject();

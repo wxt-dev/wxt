@@ -11,10 +11,10 @@ import { wxt } from './wxt';
  * has not already set `theme_icons` on it, discover light/dark icon pairs from
  * the public assets and attach them.
  */
-export function addDiscoveredThemeIcons(
+export const addDiscoveredThemeIcons = (
   manifest: Browser.runtime.Manifest,
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): void {
+): void => {
   const action = manifest.action ?? manifest.browser_action;
   if (action == null) return;
 
@@ -25,16 +25,16 @@ export function addDiscoveredThemeIcons(
   if (themeIcons == null) return;
 
   (action as { theme_icons?: ThemeIcon[] }).theme_icons = themeIcons;
-}
+};
 
 /**
  * Scan `publicAssets` for paired `-light`/`-dark` icon files and return the
  * sizes where both variants exist, sorted ascending. Returns `undefined` if no
  * complete pairs are found so callers can short-circuit.
  */
-export function discoverThemeIcons(
+export const discoverThemeIcons = (
   buildOutput: Omit<BuildOutput, 'manifest'>,
-): ThemeIcon[] | undefined {
+): ThemeIcon[] | undefined => {
   const bySize = new Map<number, { light?: string; dark?: string }>();
 
   for (const asset of buildOutput.publicAssets) {
@@ -77,7 +77,7 @@ export function discoverThemeIcons(
   pairs.sort((a, b) => a.size - b.size);
 
   return pairs.length > 0 ? pairs : undefined;
-}
+};
 
 // prettier-ignore
 // #region snippet

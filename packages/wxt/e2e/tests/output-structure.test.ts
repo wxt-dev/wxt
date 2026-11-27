@@ -346,39 +346,42 @@ describe('Output Directory Structure', () => {
       }),
     });
 
-    expect(await project.serializeFile('.output/chrome-mv3/background.js'))
-      .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/background.js
-        ----------------------------------------
-        import { t as logHello } from "./chunks/log-DNePel8J.js";
-        function defineBackground(arg) {
-        	if (arg == null || typeof arg === "function") return { main: arg };
-        	return arg;
+    expect(
+      (
+        await project.serializeFile('.output/chrome-mv3/background.js')
+      ).replaceAll('\t', '  '),
+    ).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/background.js
+      ----------------------------------------
+      import { t as logHello } from "./chunks/log-DNePel8J.js";
+      var defineBackground = (arg) => {
+        if (arg == null || typeof arg === "function") return { main: arg };
+        return arg;
+      };
+      var background_default = defineBackground({
+        type: "module",
+        main() {
+          logHello("background");
         }
-        var background_default = defineBackground({
-        	type: "module",
-        	main() {
-        		logHello("background");
-        	}
-        });
-        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
-        /** Wrapper around \`console\` with a "[wxt]" prefix */
-        var logger = {
-        	debug: (...args) => ([...args], void 0),
-        	log: (...args) => ([...args], void 0),
-        	warn: (...args) => ([...args], void 0),
-        	error: (...args) => ([...args], void 0)
-        };
-        var result;
-        try {
-        	result = background_default.main();
-        	if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
-        } catch (err) {
-        	logger.error("The background crashed on startup!");
-        	throw err;
-        }
-        "
-      `);
+      });
+      globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
+      /** Wrapper around \`console\` with a "[wxt]" prefix */
+      var logger = {
+        debug: (...args) => ([...args], void 0),
+        log: (...args) => ([...args], void 0),
+        warn: (...args) => ([...args], void 0),
+        error: (...args) => ([...args], void 0)
+      };
+      var result;
+      try {
+        result = background_default.main();
+        if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
+      } catch (err) {
+        logger.error("The background crashed on startup!");
+        throw err;
+      }
+      "
+    `);
   });
 
   it('should generate IIFE background script when type=undefined', async () => {
@@ -416,41 +419,44 @@ describe('Output Directory Structure', () => {
       }),
     });
 
-    expect(await project.serializeFile('.output/chrome-mv3/background.js'))
-      .toMatchInlineSnapshot(`
-        ".output/chrome-mv3/background.js
-        ----------------------------------------
-        var background = (function() {
-        	function defineBackground(arg) {
-        		if (arg == null || typeof arg === "function") return { main: arg };
-        		return arg;
-        	}
-        	function logHello(name) {
-        		console.log(\`Hello \${name}!\`);
-        	}
-        	var background_default = defineBackground({ main() {
-        		logHello("background");
-        	} });
-        	globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
-        	/** Wrapper around \`console\` with a "[wxt]" prefix */
-        	var logger = {
-        		debug: (...args) => ([...args], void 0),
-        		log: (...args) => ([...args], void 0),
-        		warn: (...args) => ([...args], void 0),
-        		error: (...args) => ([...args], void 0)
-        	};
-        	var result;
-        	try {
-        		result = background_default.main();
-        		if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
-        	} catch (err) {
-        		logger.error("The background crashed on startup!");
-        		throw err;
-        	}
-        	return result;
-        })();
-        "
-      `);
+    expect(
+      (
+        await project.serializeFile('.output/chrome-mv3/background.js')
+      ).replaceAll('\t', '  '),
+    ).toMatchInlineSnapshot(`
+      ".output/chrome-mv3/background.js
+      ----------------------------------------
+      var background = (function() {
+        var defineBackground = (arg) => {
+          if (arg == null || typeof arg === "function") return { main: arg };
+          return arg;
+        };
+        function logHello(name) {
+          console.log(\`Hello \${name}!\`);
+        }
+        var background_default = defineBackground({ main() {
+          logHello("background");
+        } });
+        globalThis.browser?.runtime?.id ? globalThis.browser : globalThis.chrome;
+        /** Wrapper around \`console\` with a "[wxt]" prefix */
+        var logger = {
+          debug: (...args) => ([...args], void 0),
+          log: (...args) => ([...args], void 0),
+          warn: (...args) => ([...args], void 0),
+          error: (...args) => ([...args], void 0)
+        };
+        var result;
+        try {
+          result = background_default.main();
+          if (result instanceof Promise) console.warn("The background's main() function return a promise, but it must be synchronous");
+        } catch (err) {
+          logger.error("The background crashed on startup!");
+          throw err;
+        }
+        return result;
+      })();
+      "
+    `);
   });
 
   describe('globalName option', () => {

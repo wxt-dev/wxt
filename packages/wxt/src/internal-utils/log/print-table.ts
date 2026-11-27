@@ -1,9 +1,9 @@
-export function printTable(
+export const printTable = (
   log: (message: string) => void,
   header: string,
   rows: string[][],
   gap = 2,
-): void {
+): void => {
   if (rows.length === 0) return;
 
   const columnWidths = rows.reduce(
@@ -26,4 +26,4 @@ export function printTable(
   });
 
   log(`${header}\n${str}`);
-}
+};

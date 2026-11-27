@@ -5,7 +5,7 @@ import defu from 'defu';
 import isWsl from 'is-wsl';
 
 import { formatDuration } from '../../internal-utils/time-utils';
-import { ExtensionRunner, ResolvedConfig } from '../../types';
+import type { ExtensionRunner, ResolvedConfig } from '../../types';
 
 /**
  * WXT's default `ExtensionRunner` that uses web-ext to open the browser. It

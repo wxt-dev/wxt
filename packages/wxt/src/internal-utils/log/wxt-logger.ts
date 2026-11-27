@@ -7,7 +7,7 @@ const warned = new Set<string>();
  * scoped to this wrapper instance, so it's reset whenever a new wrapper is
  * created, e.g. once per `resolveConfig` call.
  */
-export function createWxtLogger(logger: Logger): WxtLogger {
+export const createWxtLogger = (logger: Logger): WxtLogger => {
   return {
     get level() {
       return logger.level;
@@ -29,9 +29,9 @@ export function createWxtLogger(logger: Logger): WxtLogger {
       logger.warn(...args);
     },
   };
-}
+};
 
 /** @internal for testing only */
-export function clearWarnSetForTesting(): void {
+export const clearWarnSetForTesting = (): void => {
   warned.clear();
-}
+};

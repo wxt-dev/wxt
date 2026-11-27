@@ -1,4 +1,4 @@
-import { Entrypoint, EntrypointGroup } from '../types';
+import type { Entrypoint, EntrypointGroup } from '../types';
 
 /**
  * Entrypoints are built in groups. HTML pages can all be built together in a
@@ -6,7 +6,9 @@ import { Entrypoint, EntrypointGroup } from '../types';
  *
  * This function returns the entrypoints put into these types of groups.
  */
-export function groupEntrypoints(entrypoints: Entrypoint[]): EntrypointGroup[] {
+export const groupEntrypoints = (
+  entrypoints: Entrypoint[],
+): EntrypointGroup[] => {
   const groupIndexMap: Partial<Record<Group, number>> = {};
   const groups: EntrypointGroup[] = [];
 
@@ -30,7 +32,7 @@ export function groupEntrypoints(entrypoints: Entrypoint[]): EntrypointGroup[] {
   }
 
   return groups;
-}
+};
 
 // #region snippet
 const ENTRY_TYPE_TO_GROUP_MAP: Record<Entrypoint['type'], Group> = {

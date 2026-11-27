@@ -1,5 +1,5 @@
 export default console;
 
-export function logId() {
+export const logId = () => {
   console.log('logId', browser.runtime.id);
-}
+};

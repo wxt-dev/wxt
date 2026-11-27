@@ -3,7 +3,7 @@ import { mock } from 'vitest-mock-extended';
 
 import { WXT_PACKAGE_DIR } from '../../../e2e/utils';
 import { setFakeWxt } from '../../internal-utils/testing/fake-objects';
-import { Logger } from '../../types';
+import type { Logger } from '../../types';
 import { getPackageJson } from '../package';
 
 describe('Package JSON Utils', () => {

@@ -4,7 +4,7 @@ import { pathExists } from '../internal-utils/fs-utils';
 import { unnormalizePath } from '../internal-utils/path-utils';
 import { wxt } from './wxt';
 
-export async function getPublicFiles(): Promise<string[]> {
+export const getPublicFiles = async (): Promise<string[]> => {
   if (!(await pathExists(wxt.config.publicDir))) return [];
 
   const files = await glob('**/*', {
@@ -12,4 +12,4 @@ export async function getPublicFiles(): Promise<string[]> {
     expandDirectories: false,
   });
   return files.map(unnormalizePath);
-}
+};

@@ -15,11 +15,11 @@ import type {
   MountFunctions,
 } from './types';
 
-export function applyPosition(
+export const applyPosition = (
   root: HTMLElement,
   positionedElement: HTMLElement | undefined | null,
   options: ContentScriptPositioningOptions,
-): void {
+): void => {
   // No positioning for inline UIs
   if (options.position === 'inline') return;
 
@@ -49,14 +49,14 @@ export function applyPosition(
       positionedElement.style.right = '0';
     }
   }
-}
+};
 
-export function getAnchor(
+export const getAnchor = (
   options: ContentScriptAnchoredOptions,
-): Element | undefined {
+): Element | undefined => {
   if (options.anchor == null) return document.body;
 
-  let resolved =
+  const resolved =
     typeof options.anchor === 'function' ? options.anchor() : options.anchor;
 
   if (typeof resolved === 'string') {
@@ -78,12 +78,12 @@ export function getAnchor(
   }
 
   return resolved ?? undefined;
-}
+};
 
-export function mountUi(
+export const mountUi = (
   root: HTMLElement,
   options: ContentScriptAnchoredOptions,
-): void {
+): void => {
   const anchor = getAnchor(options);
   if (anchor == null)
     throw Error(
@@ -110,12 +110,12 @@ export function mountUi(
     default:
       options.append(anchor, root);
   }
-}
+};
 
-export function createMountFunctions<TMounted>(
+export const createMountFunctions = <TMounted>(
   baseFunctions: BaseMountFunctions,
   options: ContentScriptUiOptions<TMounted>,
-): MountFunctions {
+): MountFunctions => {
   let autoMountInstance: AutoMount | undefined;
 
   const stopAutoMount = () => {
@@ -152,16 +152,16 @@ export function createMountFunctions<TMounted>(
     remove,
     autoMount,
   };
-}
+};
 
-function autoMountUi(
+const autoMountUi = (
   uiCallbacks: {
     mount: () => void;
     unmount: () => void;
     stopAutoMount: () => void;
   },
   options: ContentScriptAnchoredOptions & AutoMountOptions,
-): AutoMount {
+): AutoMount => {
   const abortController = new AbortController();
   const EXPLICIT_STOP_REASON = 'explicit_stop_auto_mount';
   const _stopAutoMount = () => {
@@ -169,7 +169,7 @@ function autoMountUi(
     options.onStop?.();
   };
 
-  let resolvedAnchor =
+  const resolvedAnchor =
     typeof options.anchor === 'function' ? options.anchor() : options.anchor;
   if (resolvedAnchor instanceof Element) {
     throw Error(
@@ -177,7 +177,7 @@ function autoMountUi(
     );
   }
 
-  async function observeElement(selector: string | null | undefined) {
+  const observeElement = async (selector: string | null | undefined) => {
     let isAnchorExist = !!getAnchor(options);
 
     // Mount if anchor exists at initialization.
@@ -212,8 +212,8 @@ function autoMountUi(
         }
       }
     }
-  }
+  };
   void observeElement(resolvedAnchor);
 
   return { stopAutoMount: _stopAutoMount };
-}
+};
