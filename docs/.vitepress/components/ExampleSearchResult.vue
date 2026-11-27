@@ -18,10 +18,11 @@ defineProps<{
 
 <style scoped>
 a {
-  padding: 16px;
+  padding: 17px;
   display: flex;
   flex-direction: column;
-  border: 2px solid var(--vp-c-bg-soft);
+  background-color: var(--wxt-c-bg-panel);
+  border: 1px solid var(--wxt-c-card-border);
   border-radius: 16px;
   gap: 8px;
 

@@ -6,6 +6,15 @@ export interface Analytics {
     eventName: string,
     eventProperties?: Record<string, string | undefined>,
   ) => Promise<void>;
+  /**
+   * Report an error. Background errors are captured automatically by providers
+   * that support exception tracking, use this to report errors from other
+   * contexts or errors you've handled yourself.
+   */
+  captureException: (
+    error: unknown,
+    properties?: Record<string, string | undefined>,
+  ) => Promise<void>;
   /** Save information about the user. */
   identify: (
     userId: string,
@@ -63,6 +72,11 @@ export type AnalyticsProvider = (
   track: (event: AnalyticsTrackEvent) => Promise<void>;
   /** Upload information about the user. */
   identify: (event: BaseAnalyticsEvent) => Promise<void>;
+  /**
+   * Upload an exception. When defined, the background will also report
+   * unhandled errors and promise rejections.
+   */
+  exception?: (event: AnalyticsExceptionEvent) => Promise<void>;
 };
 
 export interface BaseAnalyticsEvent {
@@ -103,6 +117,19 @@ export interface AnalyticsPageViewEvent extends BaseAnalyticsEvent {
 export interface AnalyticsTrackEvent extends BaseAnalyticsEvent {
   event: {
     name: string;
+    properties?: Record<string, string | undefined>;
+  };
+}
+
+export interface AnalyticsExceptionEvent extends BaseAnalyticsEvent {
+  exception: {
+    /** Ex: `"TypeError"`. */
+    type: string;
+    message: string;
+    /** The raw `Error.stack` string, if available. */
+    stack: string | undefined;
+    /** `false` for unhandled errors and promise rejections. */
+    handled: boolean;
     properties?: Record<string, string | undefined>;
   };
 }

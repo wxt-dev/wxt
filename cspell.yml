@@ -19,12 +19,14 @@ words:
   - AFFFE
   - AFFFF
   - aklinker
+  - arounds
   - automount
   - avenir
   - BFFFE
   - BFFFF
   - bidi
   - blocklists
+  - bowser
   - buildc
   - bunx
   - cachable
@@ -51,13 +53,10 @@ words:
   - dequal
   - DFFFE
   - DFFFF
-  - dtrace
-  - duckduckgo
   - EFFFE
   - EFFFF
   - esbuild
   - esque
-  - extglob
   - favicons
   - FFFE
   - FFFFE
@@ -73,10 +72,12 @@ words:
   - gtag
   - hckhakegfgenefhikdcfkaaonnclljmf
   - hookable
+  - ialddiekpanaiffomfkfchejlohnhhce
   - iconify
   - jsons
   - Kenobi
   - keystyle
+  - keyturn
   - klinker
   - linkedom
   - llms
@@ -85,31 +86,34 @@ words:
   - Menlo
   - menupanel
   - metas
-  - mktemp
+  - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2wQE8TxGFHpirCxmeszeNQDFybx/ROi7znz6eIvcgK44MQg2MRp/IBJtAyWXRaa+fId8qAerFawu2VpLo/D4NqIM3Jyce49NZHsiuOVeNwDd8+DEoGNUTG3rgSTYGMTA76JzPU7uv9Lqi0V6kSgAUl+j9Y4jvieKPLg9+qvuk+dvV6Oz8aPNgRPNgjWLwcfC/oZKxioIL+JsAa2bsIX4WpBYYop167NGkHv+nsl3j0Vt7rJv5BmqIhKK5rCb11mOmeZ8iNQyqMY+6b4QTTxX5792ypuOhuGu0bHBj96DUcVUfUMHby6gdoA+mIRBftl+82+8D5bfHBxV9qGyWPXcpQIDAQAB
+  - MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAteYCATTmqODI1451FXJ0sIaPvhIniRidWqhwIxGpFLIxWlmYzPx2W7K7KXr+c41E4GxJPTgk3GVGfFoumeMy0zKgI8DFSdn5A3DTIdy72U2MBfuRq1Tp3Sjq8h78erawma7beMLq0rZjP7dhFVBsI5RwHqGctuupzBUa9Q4g7ANYCTULF20J5x+TQinNlU1HUzg5vOIObs/Ay3Mi7MiVwAoN38ea9xLzEfFrVaAUePAx1szI18wJsv6abZl+RHj5CK7ySM7R3hqJGpSmAvXEFIqhVUD0NtJxF+b9nR08GZUiADqD+Fr0YcNTzr+a5l5u47nRgZLnop7s3a41ssUHsQIDAQAB
   - moderok
   - mycompany
   - nacl
-  - nanospinner
   - natsu
+  - networkidle
   - newtab
   - njsproj
-  - nodebuffer
   - Noto
   - ntvs
   - nypm
+  - oamekmekgnhdjmindaokbbbedelebjbn
   - obug
   - ohash
   - oklab
   - oxlint
-  - pbbf
   - personaltoolbar
+  - polyfilling
   - portaling
   - posthog
   - prebundled
   - prefs
+  - prerender
   - proxified
   - pWXLO
   - repost
+  - rumdl
   - rxliuli
   - sandboxed
   - scule
@@ -117,6 +121,7 @@ words:
   - sidepanel
   - sidepanels
   - solidjs
+  - squeezy
   - styl
   - subdependency
   - superlock
@@ -134,6 +139,7 @@ words:
   - unstub
   - unwatch
   - USSS
+  - verkit
   - vitepress
   - webext
   - webextension

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { TestProject } from '../utils';
+
 import { EslintConfigVersion } from '../../src';
+import { TestProject } from '../utils';
 
 describe('Auto Imports', () => {
   describe('imports: { ... }', () => {
@@ -133,6 +134,56 @@ describe('Auto Imports', () => {
     });
   });
 
+  describe('imports: { scan: false }', () => {
+    it('should not auto-import from the default directories, but should keep preset/library imports', async () => {
+      const project = new TestProject();
+      project.setConfigFileConfig({
+        imports: { scan: false },
+      });
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile(
+        'utils/time.ts',
+        `export function startOfDay(date: Date): Date {
+          throw Error("TODO")
+        }`,
+      );
+
+      await project.prepare();
+
+      const declaration = await project.serializeFile(
+        '.wxt/types/imports.d.ts',
+      );
+      expect(declaration).not.toContain('startOfDay');
+      expect(declaration).toContain('browser');
+    });
+
+    it('should only auto-import from directories explicitly listed in dirs', async () => {
+      const project = new TestProject();
+      project.setConfigFileConfig({
+        imports: { scan: false, dirs: ['helpers'] },
+      });
+      project.addFile('entrypoints/popup.html', `<html></html>`);
+      project.addFile(
+        'utils/time.ts',
+        `export function startOfDay(date: Date): Date {
+          throw Error("TODO")
+        }`,
+      );
+      project.addFile(
+        'helpers/index.ts',
+        `export function helperFn(): void {}`,
+      );
+
+      await project.prepare();
+
+      const declaration = await project.serializeFile(
+        '.wxt/types/imports.d.ts',
+      );
+      expect(declaration).not.toContain('startOfDay');
+      expect(declaration).toContain('helperFn');
+    });
+  });
+
   describe('imports: false', () => {
     it('should not generate a imports.d.ts file', async () => {
       const project = new TestProject();
@@ -235,6 +286,9 @@ describe('Auto Imports', () => {
         expect(
           await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
         ).toMatchSnapshot();
+        expect(
+          await project.serializeFile('.wxt/eslint-auto-imports.d.mts'),
+        ).toMatchSnapshot();
       },
     );
 
@@ -269,6 +323,9 @@ describe('Auto Imports', () => {
 
       expect(
         await project.serializeFile('.wxt/eslint-auto-imports.mjs'),
+      ).toMatchSnapshot();
+      expect(
+        await project.serializeFile('.wxt/eslint-auto-imports.d.mts'),
       ).toMatchSnapshot();
     });
 
@@ -307,6 +364,7 @@ describe('Auto Imports', () => {
       });
 
       expect(await project.serializeFile('example.json')).toMatchSnapshot();
+      expect(await project.serializeFile('example.d.ts')).toMatchSnapshot();
     });
 
     describe('Actual linting results', () => {
@@ -322,7 +380,13 @@ describe('Auto Imports', () => {
           imports: { eslintrc: { enabled } },
         });
 
-        return await project.run('eslint', 'entrypoints/background.js');
+        // The repo's root eslint.config.mjs would otherwise be picked up by
+        // ESLint 8 and force flat config mode.
+        return await project.runWithEnv(
+          enabled === 8 ? { ESLINT_USE_FLAT_CONFIG: 'false' } : {},
+          'eslint',
+          'entrypoints/background.js',
+        );
       }
 
       describe('ESLint 9', () => {

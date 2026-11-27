@@ -506,9 +506,10 @@ However, you don't need to memorize or learn the new import paths! v0.20 introdu
 So to upgrade, just replace any imports from `wxt/storage`, `wxt/client`, and `wxt/sandbox` with an import to the new `#imports` module:
 
 ```ts
-import { storage } from 'wxt/storage'; // [!code --]
-import { defineContentScript } from 'wxt/sandbox'; // [!code --]
 import { ContentScriptContext, useAppConfig } from 'wxt/client'; // [!code --]
+import { defineContentScript } from 'wxt/sandbox'; // [!code --]
+import { storage } from 'wxt/storage'; // [!code --]
+
 import { storage } from '#imports'; // [!code ++]
 import { defineContentScript } from '#imports'; // [!code ++]
 import { ContentScriptContext, getAppConfig } from '#imports'; // [!code ++]
@@ -517,9 +518,10 @@ import { ContentScriptContext, getAppConfig } from '#imports'; // [!code ++]
 You can combine the imports into a single import statement, but it's easier to just find/replace each statement.
 
 ```ts
-import { storage } from 'wxt/storage'; // [!code --]
-import { defineContentScript } from 'wxt/sandbox'; // [!code --]
 import { ContentScriptContext, useAppConfig } from 'wxt/client'; // [!code --]
+import { defineContentScript } from 'wxt/sandbox'; // [!code --]
+import { storage } from 'wxt/storage'; // [!code --]
+
 import {
   // [!code ++]
   storage, // [!code ++]
@@ -587,7 +589,7 @@ If you've previously loaded the extension into your browser manually for develop
 ### Deprecated APIs Removed
 
 - `entrypointLoader` option: WXT now uses `vite-node` for importing entrypoints during the build process.
-  <!-- markdownlint-disable-next-line MD051 -->
+  <!-- rumdl-disable-next-line MD051 -->
   > This was deprecated in v0.19.0, see the [v0.19 section](#v0-18-5-rarr-v0-19-0) for migration steps.
 - `transformManifest` option: Use the `build:manifestGenerated` hook to transform the manifest instead:
   <!-- prettier-ignore -->
@@ -650,7 +652,7 @@ export default defineConfig({
 });
 ```
 
-> [Read the full docs](/guide/essentials/config/entrypoint-loaders#vite-node) for more information.
+> [Read the full docs](/guide/essentials/config/entrypoint-loaders) for more information.
 
 :::details This change enables:
 
@@ -798,12 +800,8 @@ JS entrypoints in the output directory have been moved. Unless you're doing some
 ```ts [wxt.config.ts]
 export default defineConfig({
   zip: {
-    ignoredSources: [
-      /*...*/
-    ], // [!code --]
-    excludeSources: [
-      /*...*/
-    ], // [!code ++]
+    ignoredSources: [/*...*/], // [!code --]
+    excludeSources: [/*...*/], // [!code ++]
   },
 });
 ```
@@ -837,7 +835,7 @@ Renamed undocumented constants for detecting the build config at runtime in [#38
 
 ### New `wxt/storage` APIs
 
-`wxt/storage` no longer relies on [`unstorage`](https://www.npmjs.com/package/unstorage). Some `unstorage` APIs, like `prefixStorage`, have been removed, while others, like `snapshot`, are methods on the new `storage` object. Most of the standard usage remains the same. See <https://wxt.dev/guide/storage> and <https://wxt.dev/api/reference/wxt/storage/> for more details ([#300](https://github.com/wxt-dev/wxt/pull/300))
+`wxt/storage` no longer relies on [`unstorage`](https://www.npmjs.com/package/unstorage). Some `unstorage` APIs, like `prefixStorage`, have been removed, while others, like `snapshot`, are methods on the new `storage` object. Most of the standard usage remains the same. See [the storage guide](/storage) and [the API reference](/api/reference/wxt/utils/storage/) for more details ([#300](https://github.com/wxt-dev/wxt/pull/300))
 
 ## v0.11.0 &rarr; v0.12.0
 

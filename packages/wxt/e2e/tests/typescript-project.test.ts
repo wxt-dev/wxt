@@ -1,6 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { TestProject } from '../utils';
 import { readFile } from 'node:fs/promises';
+
+import { describe, it, expect } from 'vitest';
+
+import { TestProject } from '../utils';
 
 describe('TypeScript Project', () => {
   it('should generate defined constants correctly', async () => {

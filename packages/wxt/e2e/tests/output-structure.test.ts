@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { TestProject } from '../utils';
 
 describe('Output Directory Structure', () => {
@@ -233,7 +234,7 @@ describe('Output Directory Structure', () => {
     project.addFile(
       'entrypoints/named.content.jsx',
       `export default defineContentScript({
-        matches: ["*://*.duckduckgo.com/*"],
+        matches: ["*://*.example.com/*"],
         main() {},
       })`,
     );
@@ -244,7 +245,7 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/manifest.json
         ----------------------------------------
-        {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","background":{"service_worker":"background.js"},"content_scripts":[{"matches":["*://*.google.com/*"],"js":["content-scripts/content.js"]},{"matches":["*://*.duckduckgo.com/*"],"js":["content-scripts/named.js"]}]}"
+        {"manifest_version":3,"name":"E2E Extension","description":"Example description","version":"0.0.0","background":{"service_worker":"background.js"},"content_scripts":[{"matches":["*://*.google.com/*"],"js":["content-scripts/content.js"]},{"matches":["*://*.example.com/*"],"js":["content-scripts/named.js"]}]}"
       `);
     expect(await project.pathExists('.output/chrome-mv3/background.js'));
     expect(
@@ -275,28 +276,6 @@ describe('Output Directory Structure', () => {
       }`,
     );
 
-    project.addFile(
-      'entrypoints/sass-one.scss',
-      `$font-stack: Helvetica, sans-serif;
-      $primary-color: #333;
-
-      body {
-        font: 100% $font-stack;
-        color: $primary-color;
-      }`,
-    );
-
-    project.addFile(
-      'entrypoints/sass-two.content.scss',
-      `$font-stack: Helvetica, sans-serif;
-      $primary-color: #333;
-
-      body {
-        font: 100% $font-stack;
-        color: $primary-color;
-      }`,
-    );
-
     await project.build();
 
     expect(await project.serializeOutput(['.output/chrome-mv3/manifest.json']))
@@ -306,17 +285,7 @@ describe('Output Directory Structure', () => {
         body{color:#333;font:100% Helvetica,sans-serif}
 
         ================================================================================
-        .output/chrome-mv3/assets/sass-one.css
-        ----------------------------------------
-        body{color:#333;font:100% Helvetica,sans-serif}
-
-        ================================================================================
         .output/chrome-mv3/content-scripts/plain-two.css
-        ----------------------------------------
-        body{color:#333;font:100% Helvetica,sans-serif}
-
-        ================================================================================
-        .output/chrome-mv3/content-scripts/sass-two.css
         ----------------------------------------
         body{color:#333;font:100% Helvetica,sans-serif}
 
@@ -381,7 +350,7 @@ describe('Output Directory Structure', () => {
       .toMatchInlineSnapshot(`
         ".output/chrome-mv3/background.js
         ----------------------------------------
-        import { n as logHello } from "./chunks/_virtual_wxt-plugins-BdnAIYoG.js";
+        import { t as logHello } from "./chunks/log-DNePel8J.js";
         function defineBackground(arg) {
         	if (arg == null || typeof arg === "function") return { main: arg };
         	return arg;

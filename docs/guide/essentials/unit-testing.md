@@ -84,8 +84,8 @@ import { injectScript, createShadowRootUi } from '#imports';
 But Vitest sees this:
 
 ```ts
-import { injectScript } from 'wxt/utils/inject-script';
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root';
+import { injectScript } from 'wxt/utils/inject-script';
 ```
 
 So in this case, if you wanted to mock `injectScript`, you need to pass in `"wxt/utils/inject-script"`, not `"#imports"`.

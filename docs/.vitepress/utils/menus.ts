@@ -41,10 +41,14 @@ export function menuGroup(
   c?: boolean,
 ): SidebarItem {
   if (typeof a === 'string' && Array.isArray(b)) {
+    const resolve = (item: SidebarItem): SidebarItem => ({
+      ...item,
+      link: item.link && !item.link.startsWith('/') ? a + item.link : item.link,
+      items: item.items?.map(resolve),
+    });
     return {
       text,
-      base: a,
-      items: b,
+      items: b.map(resolve),
       collapsed: c,
     };
   }
@@ -71,9 +75,6 @@ export function menuItem(
 
 /** Clean up and add badges to typedoc leaf sections */
 export function prepareTypedocSidebar(items: SidebarItem[]) {
-  // skip contents file
-  const filtered = items.slice(1);
-
   // remove Typedoc's collapse: true from text nodes
   const prepareItems = (items: DefaultTheme.SidebarItem[], depth = 0) => {
     for (const item of items) {
@@ -89,7 +90,7 @@ export function prepareTypedocSidebar(items: SidebarItem[]) {
     }
   };
 
-  prepareItems(filtered);
+  prepareItems(items);
 
-  return filtered;
+  return items;
 }

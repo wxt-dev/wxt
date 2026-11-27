@@ -1,9 +1,10 @@
 import 'wxt';
-import { defineWxtModule } from 'wxt/modules';
+import { access, mkdir } from 'node:fs/promises';
 import { resolve, relative } from 'node:path';
+
 import defu from 'defu';
 import sharp from 'sharp';
-import { access, mkdir } from 'node:fs/promises';
+import { defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule<AutoIconsOptions>({
   name: '@wxt-dev/auto-icons',
@@ -19,21 +20,8 @@ export default defineWxtModule<AutoIconsOptions>({
       },
     );
 
-    // Remove duplicates after merging user sizes with defaults.
-    const sizes = Array.from(new Set(parsedOptions.sizes));
-
-    // Backward compatibility for the deprecated option
-    if (options?.grayscaleOnDevelopment !== undefined) {
-      wxt.logger.warn(
-        '`[auto-icons]` "grayscaleOnDevelopment" is deprecated. Use "developmentIndicator" instead.',
-      );
-
-      if (options?.developmentIndicator === undefined) {
-        parsedOptions.developmentIndicator = options!.grayscaleOnDevelopment
-          ? 'grayscale'
-          : false;
-      }
-    }
+    // Custom sizes replace defaults. Remove duplicate sizes.
+    const sizes = Array.from(new Set(options?.sizes ?? parsedOptions.sizes));
 
     const resolvedPath = resolve(wxt.config.srcDir, parsedOptions.baseIconPath);
 
@@ -142,15 +130,12 @@ export interface AutoIconsOptions {
    * @default 'grayscale'
    */
   developmentIndicator?: 'grayscale' | 'overlay' | false;
+
   /**
-   * Grayscale the image when in development mode to indicate development
+   * Sizes to generate icons for.
    *
-   * @deprecated Use `developmentIndicator` instead
-   * @default true
-   */
-  grayscaleOnDevelopment?: boolean;
-  /**
-   * Sizes to generate icons for
+   * When provided, replaces the default sizes. An empty array generates no
+   * icons.
    *
    * @default [128, 48, 32, 16]
    */

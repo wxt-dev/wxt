@@ -1,5 +1,6 @@
 import type { ChildProcess } from 'node:child_process';
 import type { Readable, Writable } from 'node:stream';
+
 import { runnerDebug } from './debug';
 
 const debug = runnerDebug.extend('cdp');

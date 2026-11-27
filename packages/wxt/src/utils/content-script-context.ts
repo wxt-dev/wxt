@@ -1,12 +1,15 @@
 /** @module wxt/utils/content-script-context */
-import { ContentScriptDefinition } from '../types';
 import { browser } from 'wxt/browser';
-import { logger } from './internal/logger';
+
+import { ContentScriptDefinition } from '../types';
 import {
-  WxtLocationChangeEvent,
+  type WxtLocationChangeEvent,
   getUniqueEventName,
 } from './internal/custom-events';
 import { createLocationWatcher } from './internal/location-watcher';
+import { logger } from './internal/logger';
+
+export type { WxtLocationChangeEvent };
 
 /**
  * Implements

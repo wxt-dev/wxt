@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 // @ts-expect-error: Vitepress data-loader magic, this import is correct
 import { data } from '../loaders/blog.data';
-import BlogPostPreview from './BlogPostPreview.vue';
 import { Post } from '../utils/types';
+import BlogPostPreview from './BlogPostPreview.vue';
 
 const posts = computed<Post[]>(() =>
   data

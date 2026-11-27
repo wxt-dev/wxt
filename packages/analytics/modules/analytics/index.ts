@@ -1,14 +1,16 @@
 import 'wxt';
 import 'wxt/utils/define-app-config';
+import { relative, resolve } from 'node:path';
+
+import { normalizePath } from 'wxt';
 import {
   addAlias,
   addViteConfig,
   addWxtPlugin,
   defineWxtModule,
 } from 'wxt/modules';
-import { relative, resolve } from 'node:path';
+
 import type { AnalyticsConfig } from './types';
-import { normalizePath } from 'wxt';
 
 declare module 'wxt/utils/define-app-config' {
   export interface WxtAppConfig {
@@ -73,17 +75,14 @@ export const analytics = createAnalytics(useAppConfig().analytics);
       }
     });
 
-    // Ensure analytics is initialized in every context, mainly the background.
-    // TODO: Once there's a way to filter which entrypoints a plugin is applied to, only apply this to the background
-    addWxtPlugin(wxt, pluginModuleId);
+    // Ensure analytics is initialized in the background only.
+    addWxtPlugin(wxt, pluginModuleId, (entry) => entry.type === 'background');
 
     // Fix issues with dependencies
     addViteConfig(wxt, () => ({
       optimizeDeps: {
         // Ensure the "#analytics" import is processed by vite in the background plugin
         exclude: ['@wxt-dev/analytics'],
-        // Ensure the CJS subdependency is preprocessed into ESM
-        include: ['@wxt-dev/analytics > ua-parser-js'],
       },
     }));
   },

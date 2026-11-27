@@ -1,9 +1,10 @@
 /** @vitest-environment happy-dom */
 import { describe, it, beforeEach, vi, expect, afterEach } from 'vitest';
-import { createIntegratedUi } from '../integrated';
-import { createIframeUi } from '../iframe';
-import { createShadowRootUi } from '../shadow-root';
+
 import { ContentScriptContext } from '../../content-script-context';
+import { createIframeUi } from '../iframe';
+import { createIntegratedUi } from '../integrated';
+import { createShadowRootUi } from '../shadow-root';
 import { ContentScriptUi } from '../types';
 
 /** Util for floating promise. */
@@ -47,7 +48,7 @@ describe('Content Script UIs', () => {
         <p id="three"></p>
       </div>
     `;
-    window.fetch = fetch;
+    vi.stubGlobal('fetch', fetch);
     fetch.mockResolvedValue({ text: () => Promise.resolve('') });
     ctx = new ContentScriptContext('test');
   });
@@ -576,6 +577,28 @@ describe('Content Script UIs', () => {
 
           expect(onMount).toHaveBeenCalledTimes(3);
           expect(onRemove).toHaveBeenCalledTimes(3);
+        });
+
+        it('should resolve the anchor once per mutation batch, not once per mutation', async () => {
+          const anchor = vi.fn(() => `#parent > #${DYNAMIC_CHILD_ID}`);
+          ui = await createUiFunction(ctx, {
+            position: 'inline',
+            onMount,
+            anchor,
+            page: name === 'iframe' ? '/page.html' : undefined,
+            name: 'test-component',
+          });
+          ui.autoMount();
+          await runMicrotasks();
+          anchor.mockClear();
+
+          const noise = appendTestElement({ id: 'noise' });
+          for (let index = 0; index < 50; index++) {
+            noise.setAttribute('data-index', String(index));
+          }
+          await runMicrotasks();
+
+          expect(anchor).toHaveBeenCalledTimes(1);
         });
 
         describe('options', () => {

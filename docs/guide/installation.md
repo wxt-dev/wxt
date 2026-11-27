@@ -30,9 +30,11 @@ npx wxt@latest init
 :::
 
 :::info Starter Templates:
-[<Icon name="TypeScript" style="margin-left: 16px;" />Vanilla](https://github.com/wxt-dev/wxt/tree/main/templates/vanilla)<br/>[<Icon name="Vue" style="margin-left: 16px;" />Vue](https://github.com/wxt-dev/wxt/tree/main/templates/vue)<br/>[<Icon name="React" style="margin-left: 16px;" />React](https://github.com/wxt-dev/wxt/tree/main/templates/react)<br/>[<Icon name="Svelte" style="margin-left: 16px;" />Svelte](https://github.com/wxt-dev/wxt/tree/main/templates/svelte)<br/>[<Icon name="Solid" icon="https://www.solidjs.com/img/favicons/favicon-32x32.png"  style="margin-left: 16px;" />Solid](https://github.com/wxt-dev/wxt/tree/main/templates/solid)
+[<Icon name="TypeScript" style="margin-left: 16px;" />Vanilla](https://github.com/wxt-dev/wxt/tree/main/templates/vanilla)<br/>[<Icon name="Vue" style="margin-left: 16px;" />Vue](https://github.com/wxt-dev/wxt/tree/main/templates/vue)<br/>[<Icon name="React" style="margin-left: 16px;" />React](https://github.com/wxt-dev/wxt/tree/main/templates/react)<br/>[<Icon name="Svelte" style="margin-left: 16px;" />Svelte](https://github.com/wxt-dev/wxt/tree/main/templates/svelte)<br/>[<Icon name="Solid" icon="https://www.solidjs.com/img/logos/icon/solid-icon-light.svg"  style="margin-left: 16px;" />Solid](https://github.com/wxt-dev/wxt/tree/main/templates/solid)
 
 <small style="opacity: 50%">All templates use TypeScript by default. To use JavaScript, change the file extensions.</small>
+
+<small style="opacity: 50%">More starters made by the community are listed under [Community, Starter Templates](/guide/resources/community#starter-templates).</small>
 :::
 
 ### Demo
@@ -44,6 +46,7 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
 ## From Scratch
 
 1. Create a new project
+
    :::code-group
 
    ```sh [Bun]
@@ -69,6 +72,7 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
    :::
 
 2. Install WXT:
+
    :::code-group
 
    ```sh [Bun]
@@ -90,6 +94,7 @@ Once you've run the `dev` command, continue to [Next Steps](#next-steps)!
    :::
 
 3. Add an entrypoint, `my-project/entrypoints/background.ts`:
+
    :::code-group
 
    ```ts

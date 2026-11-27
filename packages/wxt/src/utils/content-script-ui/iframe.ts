@@ -1,14 +1,15 @@
 /** @module wxt/utils/content-script-ui/iframe */
 import { browser } from 'wxt/browser';
+
 import { ContentScriptContext } from '../content-script-context';
-import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
+import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 
 /**
  * Create a content script UI using an iframe.
  *
- * @param options - Iframe options. See {@link ContentScriptUiOptions} for shared
- *   positioning, anchoring, `append`, and removal options.
+ * @param options - Iframe options. See {@link ContentScriptUiOptions} for
+ *   shared positioning, anchoring, `append`, and removal options.
  * @see https://wxt.dev/guide/essentials/content-scripts.html#iframe
  */
 export function createIframeUi<TMounted>(
@@ -57,6 +58,11 @@ export interface IframeContentScriptUi<
   wrapper: HTMLDivElement;
 }
 
+/**
+ * {@inheritDoc wxt/utils/content-script-ui/types!ContentScriptUiOptions}
+ *
+ * @interface
+ */
 export type IframeContentScriptUiOptions<TMounted> =
   ContentScriptUiOptions<TMounted> & {
     /**

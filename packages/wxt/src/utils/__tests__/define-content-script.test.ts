@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { defineContentScript } from '../define-content-script';
+
 import { ContentScriptDefinition } from '../../types';
+import { defineContentScript } from '../define-content-script';
 
 describe('defineContentScript', () => {
   it('should return the object passed in', () => {

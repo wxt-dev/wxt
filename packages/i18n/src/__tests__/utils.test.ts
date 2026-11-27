@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { ChromeMessage } from '../build';
 import {
   applyNamedSubstitutions,
@@ -57,6 +58,18 @@ describe('Utils', () => {
     it('should leave missing substitutions unchanged', () => {
       expect(applyNamedSubstitutions('Hello {name}', {})).toBe('Hello {name}');
     });
+
+    it('should leave escaped braces as literal tokens', () => {
+      expect(
+        applyNamedSubstitutions(
+          'Translate {\\{selection}} into {\\{targetLanguage}}',
+          {
+            selection: 'Ada',
+            targetLanguage: 'WXT',
+          },
+        ),
+      ).toBe('Translate {{selection}} into {{targetLanguage}}');
+    });
   });
 
   describe('getNamedSubstitutionNames', () => {
@@ -69,6 +82,12 @@ describe('Utils', () => {
 
     it('should return an empty array when no named substitutions are present', () => {
       expect(getNamedSubstitutionNames('Hello $1')).toEqual([]);
+    });
+
+    it('should not treat escaped braces as named substitutions', () => {
+      expect(getNamedSubstitutionNames('{\\{token}} and {name}')).toEqual([
+        'name',
+      ]);
     });
   });
 

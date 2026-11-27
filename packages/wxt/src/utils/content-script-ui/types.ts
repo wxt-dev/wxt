@@ -4,6 +4,13 @@ export interface ContentScriptUi<TMounted> extends MountFunctions {
   mounted: TMounted | undefined;
 }
 
+/**
+ * Options shared by integrated, shadow root, and iframe UIs.
+ *
+ * `position` selects `"inline"`, `"overlay"`, or `"modal"` positioning.
+ * `zIndex` controls the positioning element's stacking level for overlays and
+ * modals. `alignment` is available for overlays.
+ */
 export type ContentScriptUiOptions<TMounted> = ContentScriptPositioningOptions &
   ContentScriptAnchoredOptions & {
     /**
@@ -35,20 +42,27 @@ export type ContentScriptAppendMode =
   | 'after'
   | ((anchor: Element, ui: Element) => void);
 
+// Keep unsupported fields on each branch so TypeDoc can flatten the union
+// without accepting invalid position/option combinations.
+/** Inline positioning does not support `zIndex` or `alignment`. */
 export interface ContentScriptInlinePositioningOptions {
+  /** Choose between `"inline"`, `"overlay"`, or `"modal"` positioning. */
   position: 'inline';
+  zIndex?: never;
+  alignment?: never;
 }
 
 export interface ContentScriptOverlayPositioningOptions {
   position: 'overlay';
   /**
-   * The `z-index` used on the `wrapper` element. Set to a positive number to
+   * The `z-index` used on the positioning element. Set to a positive number to
    * show your UI over website content.
    */
   zIndex?: number;
   /**
-   * When using `type: "overlay"`, the mounted element is 0px by 0px in size.
-   * Alignment specifies which corner is aligned with that 0x0 pixel space.
+   * When using `position: "overlay"`, the mounted element is 0px by 0px in
+   * size. Alignment specifies which corner is aligned with that 0x0 pixel
+   * space.
    *
    * [Visualization of alignment
    * options](https://wxt.dev/content-script-ui-alignment.png)
@@ -58,13 +72,17 @@ export interface ContentScriptOverlayPositioningOptions {
   alignment?: ContentScriptOverlayAlignment;
 }
 
+/**
+ * Modal positioning options.
+ *
+ * @property zIndex The `z-index` used on the `shadowHost` element. Set to a
+ *   positive number to show your UI over website content.
+ * @property alignment Only available when `position` is `"overlay"`.
+ */
 export interface ContentScriptModalPositioningOptions {
   position: 'modal';
-  /**
-   * The `z-index` used on the `shadowHost`. Set to a positive number to show
-   * your UI over website content.
-   */
   zIndex?: number;
+  alignment?: never;
 }
 
 /**

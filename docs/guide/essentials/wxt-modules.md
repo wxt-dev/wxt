@@ -145,8 +145,8 @@ There are two "correct" ways to add console logs to your modules:
 2. Install [`obug`](https://www.npmjs.com/package/obug) for debug messages
 
 ```ts
-import { defineWxtModule } from 'wxt/modules';
 import { createDebug } from 'obug';
+import { defineWxtModule } from 'wxt/modules';
 
 const debug = createDebug('my-module');
 
@@ -282,8 +282,9 @@ export default defineWxtModule({
 Create a file in `.wxt`, add an alias to import it, and add auto-imports for exported variables.
 
 ```ts
-import { defineWxtModule } from 'wxt/modules';
 import { resolve } from 'node:path';
+
+import { defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule({
   imports: [
@@ -320,8 +321,9 @@ export default defineWxtModule({
 #### Generate declaration file
 
 ```ts
-import { defineWxtModule } from 'wxt/modules';
 import { resolve } from 'node:path';
+
+import { defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule({
   setup(wxt) {

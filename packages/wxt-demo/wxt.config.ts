@@ -1,10 +1,11 @@
-import { defineConfig } from 'wxt';
 import { presetWind3 } from 'unocss';
+import { defineConfig } from 'wxt';
 
 export default defineConfig({
   srcDir: 'src',
   targetBrowsers: ['chrome', 'firefox', 'safari'],
   manifest: {
+    key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2wQE8TxGFHpirCxmeszeNQDFybx/ROi7znz6eIvcgK44MQg2MRp/IBJtAyWXRaa+fId8qAerFawu2VpLo/D4NqIM3Jyce49NZHsiuOVeNwDd8+DEoGNUTG3rgSTYGMTA76JzPU7uv9Lqi0V6kSgAUl+j9Y4jvieKPLg9+qvuk+dvV6Oz8aPNgRPNgjWLwcfC/oZKxioIL+JsAa2bsIX4WpBYYop167NGkHv+nsl3j0Vt7rJv5BmqIhKK5rCb11mOmeZ8iNQyqMY+6b4QTTxX5792ypuOhuGu0bHBj96DUcVUfUMHby6gdoA+mIRBftl+82+8D5bfHBxV9qGyWPXcpQIDAQAB',
     permissions: ['storage'],
     default_locale: 'en',
     web_accessible_resources: [
@@ -14,14 +15,13 @@ export default defineConfig({
       },
     ],
   },
-  zip: {
-    downloadPackages: ['sass'],
-  },
   analysis: {
     open: true,
   },
   webExt: {
-    startUrls: ['https://duckduckgo.com'],
+    chromiumPref: {
+      'extensions.pinned_extensions': ['ialddiekpanaiffomfkfchejlohnhhce'],
+    },
   },
   example: {
     a: 'a',
@@ -34,7 +34,6 @@ export default defineConfig({
       'iframe-src',
       'injected',
       'example-tsx',
-      'example-2',
       'iframe',
       'location-change',
       'main-world',

@@ -1,9 +1,16 @@
-import consola from 'consola';
-import { glob } from 'tinyglobby';
 import { dirname } from 'node:path';
-import pMap from 'p-map';
-import * as semver from 'semver';
 import { styleText } from 'node:util';
+
+import pMap from 'p-map';
+import {
+  difference,
+  findMinimumForRange,
+  IncrementType,
+  isGreaterThan,
+  isStable,
+  normalize,
+  satisfies,
+} from 'verkit';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.
@@ -28,8 +35,6 @@ const IGNORED_PACKAGES = [
   'esbuild',
   // Maintained manually to match min-node version
   '@types/node',
-  // License changed in newer versions
-  'ua-parser-js',
 ];
 
 await main();
@@ -52,31 +57,31 @@ async function main(): Promise<never> {
     dependencyVersionsMap,
   );
 
-  consola.start(
+  console.log(
     `Fetching ${Object.keys(dependencyVersionsMap).length} dependencies...`,
   );
   const dependencies = await fetchAllPackageInfos(dependencyVersionMap);
-  consola.success('Done!');
+  console.log('Done!');
 
   const isMajor = ['-m', '--major'].some((arg) => args.includes(arg));
   const upgrades = await detectUpgrades(dependencies, isMajor);
 
   if (!upgrades.length) {
-    consola.info("\nNo upgrades found, you're up to date!\n");
+    console.log("\nNo upgrades found, you're up to date!\n");
     process.exit(0);
   }
 
   printUpgrades(upgrades);
 
   if (!isWrite) {
-    consola.info('Run with `-w` to write changes to package.json files\n');
+    console.log('Run with `-w` to write changes to package.json files\n');
     process.exit(0);
   }
 
-  consola.start('Writing new versions to package.json files...');
+  console.log('Writing new versions to package.json files...');
   await writeUpgrades(packageJsonFiles, upgrades);
-  consola.success('Done!');
-  consola.info('\nRun `bun install` to install new dependencies\n');
+  console.log('Done!');
+  console.log('\nRun `bun install` to install new dependencies\n');
   process.exit(0);
 }
 
@@ -94,10 +99,10 @@ async function getPackageJsonDependencies(
   packageJsonFiles: string[];
   dependencyVersionsMap: DependencyVersionsMap;
 }> {
-  const packageJsonFiles = await glob(
-    ['package.json', '*/*/package.json', '!**/node_modules'],
-    { onlyFiles: true, expandDirectories: false },
-  );
+  const packageJsonFiles = [
+    'package.json',
+    ...(await Array.fromAsync(new Bun.Glob('*/*/package.json').scan('.'))),
+  ].filter((path) => !path.includes('node_modules'));
   const packageJsons: PackageJsonData[] = await Promise.all(
     packageJsonFiles.map(async (path) => ({
       content: await Bun.file(path).json(),
@@ -155,7 +160,7 @@ function validateNoMultipleVersions(
     ...depsWithMultipleVersions.map(([name]) => name.length),
   );
 
-  consola.info('Found multiple versions of:');
+  console.log('Found multiple versions of:');
   for (const [name, versions] of depsWithMultipleVersions) {
     console.log(
       `    ${styleText('magenta', name.padEnd(maxWidth))}  ${Array.from(
@@ -165,7 +170,7 @@ function validateNoMultipleVersions(
         .join('\t')}`,
     );
   }
-  consola.error(`${depsWithMultipleVersions.length} problem(s) found`);
+  console.error(`${depsWithMultipleVersions.length} problem(s) found`);
   process.exit(1);
 }
 
@@ -246,7 +251,7 @@ type UpgradeDetails = {
   upgradeToVersion: string;
   upgradeToVersionReleasedAt: Date;
   upgradeToRange: string;
-  diff: semver.ReleaseType | null;
+  diff: IncrementType | null;
   latestVersion: string;
   latestVersionReleasedAt: Date;
 };
@@ -267,7 +272,7 @@ async function detectUpgrades(
 
     const rangePrefix = lastRange.match(/^(.?)(\d+\.\d+\.\d+)/)?.[1] ?? '';
 
-    const currentVersion = semver.minVersion(lastRange)?.version;
+    const currentVersion = normalize(findMinimumForRange(lastRange)!);
     if (currentVersion == null)
       throw Error(`Invalid version specifier: ${dep.name}@${currentRange}`);
 
@@ -283,11 +288,11 @@ async function detectUpgrades(
       : // Otherwise use the last stable version greater than the current version that is not a major release
         (dep.info.versions.findLast(
           (v) =>
-            semver.gt(v, currentVersion) &&
+            isGreaterThan(v, currentVersion) &&
             (isPre1 ? ['patch'] : ['patch', 'minor']).includes(
-              semver.diff(v, currentVersion)!,
+              difference(v, currentVersion)!,
             ) &&
-            semver.prerelease(v) == null,
+            isStable(v),
         ) ?? currentVersion);
     const upgradeToVersionReleasedAt = new Date(
       dep.info.time[upgradeToVersion],
@@ -295,12 +300,12 @@ async function detectUpgrades(
 
     let upgradeToRange = `${rangePrefix}${upgradeToVersion}`;
     upgradeToRange = isUnion
-      ? semver.satisfies(upgradeToVersion, currentRange)
+      ? satisfies(upgradeToVersion, currentRange)
         ? currentRange
         : `${currentRange} || ${upgradeToRange}`
       : upgradeToRange;
 
-    let diff = semver.diff(currentVersion, upgradeToVersion);
+    let diff = difference(currentVersion, upgradeToVersion);
     if (isPre1) {
       if (diff === 'minor') diff = 'major';
       if (diff === 'patch') diff = 'minor';
@@ -336,7 +341,7 @@ function printUpgrades(upgrades: UpgradeDetails[]): void {
   );
   const numberPadding = String(upgrades.length + 1).length + 1;
 
-  consola.info(`Found ${upgrades.length} upgrades:\n`);
+  console.log(`Found ${upgrades.length} upgrades:\n`);
 
   for (let i = 0; i < upgrades.length; i++) {
     const upgrade = upgrades[i];
