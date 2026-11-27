@@ -1,4 +1,5 @@
 import type { Browser } from '@wxt-dev/browser';
+
 import { logger } from './logger';
 
 interface WebSocketMessage {
