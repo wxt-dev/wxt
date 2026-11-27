@@ -15,7 +15,7 @@ const PING_EVENT = '__extport_ping';
 export interface ExtportProviderOptions {
   /** Extension id from https://dash.extport.dev (`ext_…`). */
   extensionId: string;
-  /** Override for self-hosted extport instances. */
+  /** Base URL for a self-hosted extport instance. Defaults to `https://api.extport.dev`. */
   apiBase?: string;
 }
 
