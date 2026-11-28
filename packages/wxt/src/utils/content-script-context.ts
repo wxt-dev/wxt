@@ -240,6 +240,112 @@ export class ContentScriptContext implements AbortController {
     );
   }
 
+  /** Set by `applyPatch` to store the restore function. */
+  private restorePatch?: () => void;
+
+  /**
+   * Patches `target`'s timer and event listener APIs (`setTimeout`,
+   * `setInterval`, `requestAnimationFrame`, `requestIdleCallback`,
+   * `addEventListener`) so plain calls behave like their `ctx`-aware
+   * counterparts, automatically cleaning up when this context is invalidated.
+   *
+   * @example
+   *   ctx.applyPatch(otherWindow);
+   *
+   * @param target - The `window` to patch. Defaults to the global `window`.
+   * @returns A function that restores the original, unpatched functions.
+   */
+  applyPatch(target: Window = window): () => void {
+    if (this.restorePatch) {
+      return this.restorePatch;
+    }
+
+    const originals = {
+      setInterval: target.setInterval,
+      clearInterval: target.clearInterval,
+      setTimeout: target.setTimeout,
+      clearTimeout: target.clearTimeout,
+      requestAnimationFrame: target.requestAnimationFrame,
+      cancelAnimationFrame: target.cancelAnimationFrame,
+      requestIdleCallback: target.requestIdleCallback,
+      cancelIdleCallback: target.cancelIdleCallback,
+      addEventListener: target.addEventListener,
+    };
+
+    target.setInterval = (handler: () => void, timeout?: number): number => {
+      const id = originals.setInterval.call(
+        target,
+        () => {
+          if (this.isValid) handler();
+        },
+        timeout,
+      ) as unknown as number;
+      this.onInvalidated(() => originals.clearInterval.call(target, id));
+      return id;
+    };
+
+    target.setTimeout = (handler: () => void, timeout?: number): number => {
+      const id = originals.setTimeout.call(
+        target,
+        () => {
+          if (this.isValid) handler();
+        },
+        timeout,
+      );
+      this.onInvalidated(() => originals.clearTimeout.call(target, id));
+      return id;
+    };
+
+    target.requestAnimationFrame = (callback: FrameRequestCallback): number => {
+      const id = originals.requestAnimationFrame.call(target, (...args) => {
+        if (this.isValid) callback(...args);
+      });
+      this.onInvalidated(() => originals.cancelAnimationFrame.call(target, id));
+      return id;
+    };
+
+    target.requestIdleCallback = (
+      callback: IdleRequestCallback,
+      options?: IdleRequestOptions,
+    ): number => {
+      const id = originals.requestIdleCallback.call(
+        target,
+        (...args) => {
+          if (this.isValid) callback(...args);
+        },
+        options,
+      );
+      this.onInvalidated(() => originals.cancelIdleCallback.call(target, id));
+      return id;
+    };
+
+    target.addEventListener = (
+      type: string,
+      handler: EventListenerOrEventListenerObject,
+      options?: boolean | AddEventListenerOptions,
+    ): void => {
+      if (type === 'wxt:locationchange') {
+        if (this.isValid) this.locationWatcher.run();
+      }
+      originals.addEventListener.call(
+        target,
+        type.startsWith('wxt:') ? getUniqueEventName(type) : type,
+        handler,
+        typeof options === 'boolean'
+          ? { capture: options, signal: this.signal }
+          : { ...options, signal: this.signal },
+      );
+    };
+
+    const restore = () => {
+      Object.assign(target, originals);
+      this.restorePatch = undefined;
+    };
+    this.restorePatch = restore;
+    this.onInvalidated(restore);
+    return restore;
+  }
+
   /**
    * @internal
    * Abort the abort controller and execute all `onInvalidated` listeners.
