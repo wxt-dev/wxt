@@ -1,7 +1,7 @@
 import { mkdir, readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'path';
 
-import { FsCache } from '../types';
+import type { FsCache } from '../types';
 import { writeFileIfDifferent } from './fs-utils';
 
 /**

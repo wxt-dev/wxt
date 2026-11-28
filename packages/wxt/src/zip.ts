@@ -1,7 +1,8 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import { createZip, type Zip } from '@aklinker1/zero-zip';
+import { createZip } from '@aklinker1/zero-zip';
+import type { Zip } from '@aklinker1/zero-zip';
 import { glob } from 'tinyglobby';
 
 import { printFileList } from './internal-utils/log';
@@ -12,7 +13,7 @@ import { findEntrypoints } from './internal/find-entrypoints';
 import { internalBuild } from './internal/internal-build';
 import { getPackageJson } from './internal/package';
 import { registerWxt, wxt } from './internal/wxt';
-import { InlineConfig } from './types';
+import type { InlineConfig } from './types';
 
 /**
  * Build and zip the extension for distribution.

@@ -1,4 +1,4 @@
-import { ContentScriptContext } from '../content-script-context';
+import type { ContentScriptContext } from '../content-script-context';
 import { WxtLocationChangeEvent } from './custom-events';
 
 const supportsNavigationApi =

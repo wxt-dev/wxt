@@ -15,7 +15,7 @@ import {
   resolveAppConfig,
 } from '../internal/builders/vite/plugins';
 import { registerWxt, wxt } from '../internal/wxt';
-import { InlineConfig } from '../types';
+import type { InlineConfig } from '../types';
 
 /**
  * Vite plugin that configures Vitest with everything required to test a WXT

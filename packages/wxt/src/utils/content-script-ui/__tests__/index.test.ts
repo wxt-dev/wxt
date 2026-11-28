@@ -5,7 +5,7 @@ import { ContentScriptContext } from '../../content-script-context';
 import { createIframeUi } from '../iframe';
 import { createIntegratedUi } from '../integrated';
 import { createShadowRootUi } from '../shadow-root';
-import { ContentScriptUi } from '../types';
+import type { ContentScriptUi } from '../types';
 
 /** Util for floating promise. */
 async function runMicrotasks() {

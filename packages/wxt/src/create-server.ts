@@ -17,7 +17,7 @@ import {
   registerWxt,
   wxt,
 } from './internal/wxt';
-import { InlineConfig, ServerInfo, WxtDevServer } from './types';
+import type { InlineConfig, ServerInfo, WxtDevServer } from './types';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before

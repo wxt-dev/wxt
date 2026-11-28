@@ -9,7 +9,7 @@ import { x as spawn } from 'tinyexec';
 
 import { pathExists } from './internal-utils/fs-utils';
 import { normalizePath } from './internal-utils/path-utils';
-import { TextStyle } from './internal-utils/type-utils';
+import type { TextStyle } from './internal-utils/type-utils';
 import { createSpinner } from './internal/spinner';
 
 export async function initialize(options: {

@@ -5,12 +5,12 @@ import pMap from 'p-map';
 import {
   difference,
   findMinimumForRange,
-  IncrementType,
   isGreaterThan,
   isStable,
   normalize,
   satisfies,
 } from 'verkit';
+import type { IncrementType } from 'verkit';
 
 const HELP_MESSAGE = `
 Upgrades dependencies throughout WXT using custom rules.

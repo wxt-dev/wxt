@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { ContentScriptDefinition } from '../../types';
+import type { ContentScriptDefinition } from '../../types';
 import { defineContentScript } from '../define-content-script';
 
 describe('defineContentScript', () => {

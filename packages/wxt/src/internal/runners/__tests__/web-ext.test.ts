@@ -3,12 +3,14 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mock, MockProxy } from 'vitest-mock-extended';
-import webExt, { WebExtRunInstance } from 'web-ext';
+import type { MockProxy } from 'vitest-mock-extended';
+import { mock } from 'vitest-mock-extended';
+import type { WebExtRunInstance } from 'web-ext';
+import webExt from 'web-ext';
 import logger from 'web-ext/util/logger';
 
 import { setFakeWxt } from '../../../internal-utils/testing/fake-objects';
-import { WebExtConfig } from '../../../types';
+import type { WebExtConfig } from '../../../types';
 import { WebExtRunner } from '../web-ext';
 
 const DEFAULT_IS_WSL = false;

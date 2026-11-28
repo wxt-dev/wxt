@@ -16,13 +16,13 @@ import { basename, extname, join, resolve } from 'node:path';
 
 import { watch } from 'chokidar';
 import { glob } from 'tinyglobby';
-import { GeneratedPublicFile, WxtDirFileEntry } from 'wxt';
+import type { GeneratedPublicFile, WxtDirFileEntry } from 'wxt';
 import { addAlias, defineWxtModule } from 'wxt/modules';
 
 import {
   generateChromeMessagesText,
-  parseMessagesFile,
   generateTypeText,
+  parseMessagesFile,
   SUPPORTED_LOCALES,
 } from './build';
 import { standardizeLocale } from './utils';

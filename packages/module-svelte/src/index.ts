@@ -1,9 +1,6 @@
 import 'wxt';
-import {
-  svelte,
-  vitePreprocess,
-  Options as PluginOptions,
-} from '@sveltejs/vite-plugin-svelte';
+import { svelte, vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import type { Options as PluginOptions } from '@sveltejs/vite-plugin-svelte';
 import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule<SvelteModuleOptions>({

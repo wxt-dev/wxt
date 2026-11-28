@@ -1,7 +1,7 @@
 /** @module wxt/utils/content-script-ui/iframe */
 import { browser } from 'wxt/browser';
 
-import { ContentScriptContext } from '../content-script-context';
+import type { ContentScriptContext } from '../content-script-context';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
 import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 

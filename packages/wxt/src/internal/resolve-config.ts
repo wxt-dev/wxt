@@ -14,8 +14,8 @@ import { pathExists } from '../internal-utils/fs-utils';
 import { createWxtLogger } from '../internal-utils/log/wxt-logger';
 import { safeStringToNumber } from '../internal-utils/number-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import { NullishRequired } from '../internal-utils/type-utils';
-import {
+import type { NullishRequired } from '../internal-utils/type-utils';
+import type {
   ConfigEnv,
   InlineConfig,
   Logger,

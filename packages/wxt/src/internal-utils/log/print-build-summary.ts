@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 
 import { wxt } from '../../internal/wxt';
-import { BuildOutput } from '../../types';
+import type { BuildOutput } from '../../types';
 import { printFileList } from './print-file-list';
 
 export async function printBuildSummary(

@@ -1,5 +1,6 @@
 import { createMermaidRenderer } from 'vitepress-mermaid-renderer';
-import { useData, type EnhanceAppContext } from 'vitepress/client';
+import { useData } from 'vitepress/client';
+import type { EnhanceAppContext } from 'vitepress/client';
 import DefaultTheme from 'vitepress/theme';
 import { h, nextTick, watch } from 'vue';
 

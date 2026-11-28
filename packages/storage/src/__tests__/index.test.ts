@@ -2,7 +2,8 @@ import { fakeBrowser } from '@webext-core/fake-browser';
 import { browser } from '@wxt-dev/browser';
 import { beforeEach, describe, expect, expectTypeOf, it, vi } from 'vitest';
 
-import { MigrationError, type WxtStorageItem, storage } from '../index';
+import { MigrationError, storage } from '../index';
+import type { WxtStorageItem } from '../index';
 
 /**
  * This works because fakeBrowser is synchronous, and is will finish any number

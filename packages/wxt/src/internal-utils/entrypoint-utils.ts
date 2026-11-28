@@ -1,6 +1,6 @@
 import path, { relative, resolve, extname } from 'node:path';
 
-import {
+import type {
   Entrypoint,
   PerBrowserOption,
   ResolvedPerBrowserOptions,

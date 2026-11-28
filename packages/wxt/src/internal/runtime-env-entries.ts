@@ -1,4 +1,4 @@
-import { ResolvedConfig } from '../types';
+import type { ResolvedConfig } from '../types';
 
 export function getRuntimeEnvEntries(
   config: ResolvedConfig,

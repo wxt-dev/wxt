@@ -10,12 +10,11 @@ import { isCI } from '../internal-utils/env-utils';
 import { printBuildSummary } from '../internal-utils/log';
 import { unnormalizePath } from '../internal-utils/path-utils';
 import { formatDuration } from '../internal-utils/time-utils';
-import {
-  ValidationError,
+import type {
   ValidationResult,
   ValidationResults,
-  validateEntrypoints,
 } from '../internal/validation';
+import { validateEntrypoints, ValidationError } from '../internal/validation';
 import { wxt } from '../internal/wxt';
 import type { BuildOutput, Entrypoint } from '../types';
 import { findEntrypoints } from './find-entrypoints';

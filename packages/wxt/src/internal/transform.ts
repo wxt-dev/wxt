@@ -1,4 +1,5 @@
-import { ProxifiedModule, parseModule } from 'magicast';
+import type { ProxifiedModule } from 'magicast';
+import { parseModule } from 'magicast';
 
 /**
  * Removes any code used at runtime related to an entrypoint's main function.

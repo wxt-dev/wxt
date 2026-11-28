@@ -1,6 +1,6 @@
 import { every, some } from '../internal-utils/array-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import {
+import type {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,

@@ -12,8 +12,8 @@ import { ContentSecurityPolicy } from '../internal-utils/csp-utils';
 import { getEntrypointBundlePath } from '../internal-utils/entrypoint-utils';
 import { writeFileIfDifferent } from '../internal-utils/fs-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import { ManifestV3WebAccessibleResource } from '../internal-utils/type-utils';
-import {
+import type { ManifestV3WebAccessibleResource } from '../internal-utils/type-utils';
+import type {
   Entrypoint,
   BackgroundEntrypoint,
   BuildOutput,

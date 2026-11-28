@@ -2,7 +2,7 @@
 import { createIsolatedElement } from '@webext-core/isolated-element';
 import { browser } from 'wxt/browser';
 
-import { ContentScriptContext } from '../content-script-context';
+import type { ContentScriptContext } from '../content-script-context';
 import { logger } from '../internal/logger';
 import { splitShadowRootCss } from '../split-shadow-root-css';
 import { applyPosition, createMountFunctions, mountUi } from './shared';

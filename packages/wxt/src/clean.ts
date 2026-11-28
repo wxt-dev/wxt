@@ -5,7 +5,7 @@ import { styleText } from 'node:util';
 import { glob } from 'tinyglobby';
 
 import { registerWxt, wxt } from './internal/wxt';
-import { InlineConfig } from './types';
+import type { InlineConfig } from './types';
 
 /**
  * Remove generated/temp files from the directory.

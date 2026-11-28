@@ -1,5 +1,5 @@
 import { withFirstModule } from '../internal-utils/module-utils';
-import { ExtensionRunner, ResolvedConfig } from '../types';
+import type { ExtensionRunner, ResolvedConfig } from '../types';
 import { ManualRunner } from './runners/manual';
 import { WebExtRunner } from './runners/web-ext';
 

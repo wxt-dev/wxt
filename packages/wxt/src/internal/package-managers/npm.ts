@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import { x as spawn } from 'tinyexec';
 
-import { Dependency } from '../../types';
-import { WxtPackageManagerImpl } from './types';
+import type { Dependency } from '../../types';
+import type { WxtPackageManagerImpl } from './types';
 
 export const npm: WxtPackageManagerImpl = {
   overridesKey: 'overrides',

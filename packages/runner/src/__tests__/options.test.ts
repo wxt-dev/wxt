@@ -1,10 +1,11 @@
 import { mkdir } from 'node:fs/promises';
-import { tmpdir, homedir } from 'node:os';
-import { resolve, join } from 'node:path';
+import { homedir, tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { ResolvedRunOptions, resolveRunOptions } from '../options';
+import { resolveRunOptions } from '../options';
+import type { ResolvedRunOptions } from '../options';
 
 vi.mock('node:os', async () => {
   const { vi } = await import('vitest');
