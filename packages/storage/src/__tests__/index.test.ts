@@ -1075,6 +1075,32 @@ describe('Storage Utils', () => {
 
           expect(migrateToV2).not.toBeCalled();
         });
+
+        it('should update an outdated version when the value was removed before upgrading', async () => {
+          // The value was removed at v1 (removeValue keeps metadata by default)
+          await fakeBrowser.storage.local.set({ count$: { v: 1 } });
+          vi.mocked(fakeBrowser.storage.local.set).mockClear();
+
+          const item = defineTestItem();
+          await item.setValue(1);
+
+          expect(await item.getValue()).toBe(1);
+          expect(await item.getMeta()).toEqual({ v: 2 });
+
+          // Re-defining the item, like on the next startup, should not
+          // migrate the value that was saved in the latest format
+          const migrateToV2Again = vi.fn((v1) => v1);
+          storage.defineItem<number>('local:count', {
+            version: 2,
+            migrations: {
+              2: migrateToV2Again,
+            },
+          });
+          await waitForMigrations();
+
+          expect(migrateToV2).not.toBeCalled();
+          expect(migrateToV2Again).not.toBeCalled();
+        });
       });
     });
 
