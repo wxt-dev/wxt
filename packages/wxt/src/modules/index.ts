@@ -21,12 +21,12 @@ import type {
 // Re-export to prevent TS2742 type errors
 export { WxtModule };
 
-export const defineWxtModule = <TOptions extends WxtModuleOptions>(
+export function defineWxtModule<TOptions extends WxtModuleOptions>(
   module: WxtModule<TOptions> | WxtModuleSetup<TOptions>,
-): WxtModule<TOptions> => {
+): WxtModule<TOptions> {
   if (typeof module === 'function') return { setup: module };
   return module;
-};
+}
 
 /**
  * Adds a TS/JS file as an entrypoint to the project. This file will be bundled
@@ -55,11 +55,11 @@ export const defineWxtModule = <TOptions extends WxtModuleOptions>(
  * @param wxt The wxt instance provided by the module's setup function.
  * @param entrypoint The entrypoint to be bundled along with the extension.
  */
-export const addEntrypoint = (wxt: Wxt, entrypoint: Entrypoint): void => {
+export function addEntrypoint(wxt: Wxt, entrypoint: Entrypoint): void {
   wxt.hooks.hook('entrypoints:resolved', (_, entrypoints) => {
     entrypoints.push(entrypoint);
   });
-};
+}
 
 /**
  * Copy files inside a directory (as if it were the public directory) into the
@@ -74,7 +74,7 @@ export const addEntrypoint = (wxt: Wxt, entrypoint: Entrypoint): void => {
  * @param wxt The wxt instance provided by the module's setup function.
  * @param dir The directory to copy.
  */
-export const addPublicAssets = (wxt: Wxt, dir: string): void => {
+export function addPublicAssets(wxt: Wxt, dir: string): void {
   wxt.hooks.hook('build:publicAssets', async (wxt, files) => {
     const moreFiles = await glob('**/*', {
       cwd: dir,
@@ -88,7 +88,7 @@ export const addPublicAssets = (wxt: Wxt, dir: string): void => {
       files.unshift({ absoluteSrc: resolve(dir, file), relativeDest: file });
     });
   });
-};
+}
 
 /**
  * Merge additional vite config for one or more entrypoint "groups" that make up
@@ -108,10 +108,10 @@ export const addPublicAssets = (wxt: Wxt, dir: string): void => {
  * @param viteConfig A function that returns the vite config the module is
  *   adding. Same format as `vite` in `wxt.config.ts`.
  */
-export const addViteConfig = (
+export function addViteConfig(
   wxt: Wxt,
   viteConfig: (env: vite.ConfigEnv) => vite.UserConfig | undefined,
-): void => {
+): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
     const userVite = wxt.config.vite;
     wxt.config.vite = async (env) => {
@@ -123,7 +123,7 @@ export const addViteConfig = (
       return vite.mergeConfig(fromModule, fromUser);
     };
   });
-};
+}
 
 /**
  * Add a runtime plugin to the project. In each entrypoint, before executing the
@@ -144,15 +144,15 @@ export const addViteConfig = (
  * @param apply Optional. Return `true` to load the plugin in the given
  *   entrypoint. Defaults to loading the plugin in every entrypoint.
  */
-export const addWxtPlugin = (
+export function addWxtPlugin(
   wxt: Wxt,
   plugin: string,
   apply?: (entrypoint: Entrypoint) => boolean,
-): void => {
+): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
     wxt.config.plugins.push({ module: plugin, apply });
   });
-};
+}
 
 /**
  * Add an Unimport preset
@@ -184,10 +184,10 @@ export const addWxtPlugin = (
  * @param wxt The wxt instance provided by the module's setup function.
  * @param preset The preset to add to the project.
  */
-export const addImportPreset = (
+export function addImportPreset(
   wxt: Wxt,
   preset: UnimportOptions['presets'][0],
-): void => {
+): void {
   wxt.hooks.hook('config:resolved', (wxt) => {
     wxt.config.imports.presets ??= [];
     // De-duplicate built-in named presets
@@ -195,7 +195,7 @@ export const addImportPreset = (
 
     wxt.config.imports.presets.push(preset);
   });
-};
+}
 
 /**
  * Adds an import alias to the project's TSConfig paths and bundler. Path can be
@@ -224,7 +224,7 @@ export const addImportPreset = (
  *     addAlias(wxt, '#i18n', i18nPath);
  *   });
  */
-export const addAlias = (wxt: Wxt, alias: string, path: string) => {
+export function addAlias(wxt: Wxt, alias: string, path: string) {
   wxt.hooks.hook('config:resolved', (wxt) => {
     const target = resolve(wxt.config.root, path);
     if (wxt.config.alias[alias] != null && wxt.config.alias[alias] !== target) {
@@ -235,4 +235,4 @@ export const addAlias = (wxt: Wxt, alias: string, path: string) => {
     }
     wxt.config.alias[alias] = target;
   });
-};
+}

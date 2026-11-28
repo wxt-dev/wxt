@@ -2,15 +2,14 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'path';
 
 import { glob } from 'tinyglobby';
-import type { Mock } from 'vitest';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 import { unnormalizePath } from '../../internal-utils/path-utils';
 import {
   fakeResolvedConfig,
   setFakeWxt,
 } from '../../internal-utils/testing/fake-objects';
-import type {
+import {
   BackgroundEntrypoint,
   BackgroundEntrypointOptions,
   BaseEntrypointOptions,

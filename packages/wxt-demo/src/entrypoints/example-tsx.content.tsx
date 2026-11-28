@@ -24,6 +24,6 @@ export default defineContentScript({
   },
 });
 
-const SomeComponent = () => {
+function SomeComponent() {
   return <div>Some component</div>;
-};
+}

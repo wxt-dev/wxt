@@ -1,5 +1,5 @@
 /** @module wxt/utils/content-script-ui/integrated */
-import type { ContentScriptContext } from '../content-script-context';
+import { ContentScriptContext } from '../content-script-context';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
 import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 
@@ -10,10 +10,10 @@ import type { ContentScriptUi, ContentScriptUiOptions } from './types';
  *   for shared positioning, anchoring, `append`, and removal options.
  * @see https://wxt.dev/guide/essentials/content-scripts.html#integrated
  */
-export const createIntegratedUi = <TMounted>(
+export function createIntegratedUi<TMounted>(
   ctx: ContentScriptContext,
   options: IntegratedContentScriptUiOptions<TMounted>,
-): IntegratedContentScriptUi<TMounted> => {
+): IntegratedContentScriptUi<TMounted> {
   const wrapper = document.createElement(options.tag || 'div');
 
   let mounted: TMounted | undefined;
@@ -46,7 +46,7 @@ export const createIntegratedUi = <TMounted>(
     wrapper,
     ...mountFunctions,
   };
-};
+}
 
 /**
  * Shared types for the different `wxt/utils/content-script-ui/*` modules.

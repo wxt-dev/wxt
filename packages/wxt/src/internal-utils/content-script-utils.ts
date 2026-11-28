@@ -1,8 +1,8 @@
 import type { Browser } from '@wxt-dev/browser';
 
-import type { ContentScriptEntrypoint, ResolvedConfig } from '../types';
+import { ContentScriptEntrypoint, ResolvedConfig } from '../types';
 import { getEntrypointBundlePath } from './entrypoint-utils';
-import type { ManifestContentScript } from './type-utils';
+import { ManifestContentScript } from './type-utils';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts
@@ -10,9 +10,9 @@ import type { ManifestContentScript } from './type-utils';
  *
  * It is able to recognize default values,
  */
-export const hashContentScriptOptions = (
+export function hashContentScriptOptions(
   options: ContentScriptEntrypoint['options'],
-): string => {
+): string {
   const simplifiedOptions = mapWxtOptionsToContentScript(
     options,
     undefined,
@@ -46,13 +46,13 @@ export const hashContentScriptOptions = (
       // Sort all the fields alphabetically
       .sort((l, r) => l[0].localeCompare(r[0])),
   );
-};
+}
 
-export const mapWxtOptionsToContentScript = (
+export function mapWxtOptionsToContentScript(
   options: ContentScriptEntrypoint['options'],
   js: string[] | undefined,
   css: string[] | undefined,
-): ManifestContentScript => {
+): ManifestContentScript {
   return {
     matches: options.matches ?? [],
     all_frames: options.allFrames,
@@ -66,13 +66,13 @@ export const mapWxtOptionsToContentScript = (
     match_origin_as_fallback: options.matchOriginAsFallback,
     world: options.world,
   };
-};
+}
 
-export const mapWxtOptionsToRegisteredContentScript = (
+export function mapWxtOptionsToRegisteredContentScript(
   options: ContentScriptEntrypoint['options'],
   js: string[] | undefined,
   css: string[] | undefined,
-): Omit<Browser.scripting.RegisteredContentScript, 'id'> => {
+): Omit<Browser.scripting.RegisteredContentScript, 'id'> {
   return {
     allFrames: options.allFrames,
     excludeMatches: options.excludeMatches,
@@ -83,11 +83,11 @@ export const mapWxtOptionsToRegisteredContentScript = (
     css,
     world: options.world,
   };
-};
+}
 
-export const getContentScriptJs = (
+export function getContentScriptJs(
   config: ResolvedConfig,
   entrypoint: ContentScriptEntrypoint,
-): string[] => {
+): string[] {
   return [getEntrypointBundlePath(entrypoint, config.outDir, '.js')];
-};
+}

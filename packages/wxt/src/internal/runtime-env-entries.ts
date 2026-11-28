@@ -1,8 +1,8 @@
-import type { ResolvedConfig } from '../types';
+import { ResolvedConfig } from '../types';
 
-export const getRuntimeEnvEntries = (
+export function getRuntimeEnvEntries(
   config: ResolvedConfig,
-): Array<{ name: string; value: any; type: string }> => {
+): Array<{ name: string; value: any; type: string }> {
   return [
     {
       name: 'MANIFEST_VERSION',
@@ -48,9 +48,9 @@ export const getRuntimeEnvEntries = (
       type: `"build" | "serve"`,
     },
   ];
-};
+}
 
-export const getEntrypointRuntimeEnvEntries = (entrypointName: string) => {
+export function getEntrypointRuntimeEnvEntries(entrypointName: string) {
   return [
     {
       name: 'ENTRYPOINT',
@@ -58,4 +58,4 @@ export const getEntrypointRuntimeEnvEntries = (entrypointName: string) => {
       type: `string`,
     },
   ];
-};
+}

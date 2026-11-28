@@ -13,7 +13,7 @@ import {
   isHtmlEntrypoint,
 } from '../internal-utils/entrypoint-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import type {
+import {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
@@ -34,7 +34,7 @@ import { wxt } from './wxt';
  * Returns a function responsible for reloading different parts of the extension
  * when a file changes.
  */
-export const createFileReloader = (server: WxtDevServer) => {
+export function createFileReloader(server: WxtDevServer) {
   const fileChangedLock = withLock();
   const changeQueue: Array<[string, string]> = [];
   let processLoop: Promise<void> | undefined;
@@ -178,13 +178,13 @@ export const createFileReloader = (server: WxtDevServer) => {
     });
     await processLoop;
   };
-};
+}
 
-const getNewEntrypointGroups = (
+function getNewEntrypointGroups(
   normalizedFileChanges: string[],
   allEntrypointGroups: EntrypointGroup[],
   currentOutput: BuildOutput,
-): EntrypointGroup[] => {
+): EntrypointGroup[] {
   const changedFiles = new Set(normalizedFileChanges);
   const builtEntrypointPaths = new Set(
     currentOutput.steps.flatMap((step) =>
@@ -202,12 +202,12 @@ const getNewEntrypointGroups = (
     );
     return hasNewEntrypoint && changedEntrypoint;
   });
-};
+}
 
-const getLatestRebuildGroups = (
+function getLatestRebuildGroups(
   rebuildGroups: EntrypointGroup[],
   allEntrypointGroups: EntrypointGroup[],
-): EntrypointGroup[] => {
+): EntrypointGroup[] {
   const groupByEntrypointPath = new Map<string, EntrypointGroup>();
 
   allEntrypointGroups.forEach((group) => {
@@ -225,11 +225,11 @@ const getLatestRebuildGroups = (
       );
     }),
   );
-};
+}
 
-const mergeEntrypointGroups = (
+function mergeEntrypointGroups(
   ...groups: EntrypointGroup[][]
-): EntrypointGroup[] => {
+): EntrypointGroup[] {
   const deduped = new Map<string, EntrypointGroup>();
 
   groups.flat().forEach((group) => {
@@ -237,23 +237,23 @@ const mergeEntrypointGroups = (
   });
 
   return [...deduped.values()];
-};
+}
 
-const getEntrypointGroupKey = (group: EntrypointGroup): string => {
+function getEntrypointGroupKey(group: EntrypointGroup): string {
   return toArray(group)
     .map((entry) => normalizePath(entry.inputPath))
     .sort()
     .join('|');
-};
+}
 
 /**
  * From the server, tell the client to reload content scripts from the provided
  * build step outputs.
  */
-export const reloadContentScripts = (
+export function reloadContentScripts(
   steps: BuildStepOutput[],
   server: WxtDevServer,
-) => {
+) {
   if (wxt.config.manifestVersion === 3) {
     steps.forEach((step) => {
       if (server.currentOutput == null) return;
@@ -277,12 +277,12 @@ export const reloadContentScripts = (
   } else {
     server.reloadExtension();
   }
-};
+}
 
-const reloadHtmlPages = (
+function reloadHtmlPages(
   groups: EntrypointGroup[],
   server: WxtDevServer,
-): { reloadedNames: string[] } => {
+): { reloadedNames: string[] } {
   // groups might contain other files like background/content scripts, and we only care about the HTMl pages
   const htmlEntries = groups.flat().filter(isHtmlEntrypoint);
 
@@ -294,10 +294,10 @@ const reloadHtmlPages = (
   return {
     reloadedNames: htmlEntries.map((entry) => entry.name),
   };
-};
+}
 
-const getFilenameList = (names: string[]): string => {
+function getFilenameList(names: string[]): string {
   return names
     .map((name) => styleText('cyan', name))
     .join(styleText('dim', ', '));
-};
+}

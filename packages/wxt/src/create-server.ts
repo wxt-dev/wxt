@@ -17,7 +17,7 @@ import {
   registerWxt,
   wxt,
 } from './internal/wxt';
-import type { InlineConfig, ServerInfo, WxtDevServer } from './types';
+import { InlineConfig, ServerInfo, WxtDevServer } from './types';
 
 /**
  * Creates a dev server and pre-builds all the files that need to exist before
@@ -29,17 +29,17 @@ import type { InlineConfig, ServerInfo, WxtDevServer } from './types';
  *   });
  *   await server.start();
  */
-export const createServer = async (
+export async function createServer(
   inlineConfig?: InlineConfig,
-): Promise<WxtDevServer> => {
+): Promise<WxtDevServer> {
   await registerWxt('serve', inlineConfig);
 
   wxt.server = await createServerInternal();
   await wxt.hooks.callHook('server:created', wxt, wxt.server);
   return wxt.server;
-};
+}
 
-const createServerInternal = async (): Promise<WxtDevServer> => {
+async function createServerInternal(): Promise<WxtDevServer> {
   const getServerInfo = (): ServerInfo => {
     const { host, port, origin } = wxt.config.dev.server!;
     return { host, port, origin };
@@ -184,7 +184,7 @@ const createServerInternal = async (): Promise<WxtDevServer> => {
   builderServer.on?.('close', () => keyboardShortcuts.stop());
 
   return server;
-};
+}
 
 /**
  * Based on the current build output, return a list of files that are:
@@ -192,7 +192,7 @@ const createServerInternal = async (): Promise<WxtDevServer> => {
  * 1. Not in node_modules
  * 2. Not inside project root
  */
-const getExternalOutputDependencies = (server: WxtDevServer) => {
+function getExternalOutputDependencies(server: WxtDevServer) {
   return (
     server.currentOutput?.steps
       .flatMap((step, i) => {
@@ -212,4 +212,4 @@ const getExternalOutputDependencies = (server: WxtDevServer) => {
       .map(unnormalizePath)
       .filter((file) => !file.startsWith(wxt.config.root)) ?? []
   );
-};
+}

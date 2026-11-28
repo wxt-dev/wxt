@@ -1,4 +1,4 @@
-import type { WxtModule } from '../../types';
+import { WxtModule } from '../../types';
 import escapeUnicode from './escape-unicode';
 import faviconPermission from './favicon-permission';
 import plugins from './plugins';

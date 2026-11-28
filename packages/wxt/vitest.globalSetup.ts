@@ -2,7 +2,7 @@ import { access, rm } from 'node:fs/promises';
 
 let setupHappened = false;
 
-export const setup = async () => {
+export async function setup() {
   if (setupHappened) {
     throw new Error('setup called twice');
   }
@@ -18,4 +18,4 @@ export const setup = async () => {
   } catch {
     // Directory doesn't exist, nothing to clean up
   }
-};
+}

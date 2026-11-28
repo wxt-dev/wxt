@@ -22,7 +22,7 @@ const tick = () => new Promise((resolve) => setTimeout(resolve));
  * of an ID that is registered or still registering, and rejects an update to an
  * ID that is not fully registered yet.
  */
-const installFakeBrowser = () => {
+function installFakeBrowser() {
   const registered = new Map<string, Registered>();
   const registering = new Set<string>();
   const reloadedTabs: number[] = [];
@@ -79,7 +79,7 @@ const installFakeBrowser = () => {
   };
 
   return { registered, reloadedTabs, failures };
-};
+}
 
 const contentScript = (matches: string[]): ContentScript => ({
   js: ['content-scripts/content.js'],

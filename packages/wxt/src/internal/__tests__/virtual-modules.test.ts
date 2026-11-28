@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 
-import type {
+import {
   VirtualModuleId,
   VirtualModuleName,
   VirtualEntrypointType,

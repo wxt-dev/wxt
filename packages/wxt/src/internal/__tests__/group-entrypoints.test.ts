@@ -5,7 +5,7 @@ import {
   fakeGenericEntrypoint,
   fakePopupEntrypoint,
 } from '../../internal-utils/testing/fake-objects';
-import type { Entrypoint } from '../../types';
+import { Entrypoint } from '../../types';
 import { groupEntrypoints } from '../group-entrypoints';
 
 const background: Entrypoint = {

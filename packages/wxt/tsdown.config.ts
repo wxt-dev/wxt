@@ -125,13 +125,13 @@ export default defineConfig([
   },
 ]);
 
-const replaceVars = async (
+async function replaceVars(
   file: string,
   vars: Record<string, string>,
-): Promise<void> => {
+): Promise<void> {
   let text = await readFile(file, 'utf8');
   Object.entries(vars).forEach(([name, value]) => {
     text = text.replaceAll(`{{${name}}}`, value);
   });
   await writeFile(file, text, 'utf8');
-};
+}

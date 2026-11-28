@@ -7,7 +7,7 @@ import { VIRTUAL_NOOP_BACKGROUND_MODULE_ID } from '../../../constants';
  * that the web socket connection is setup and the extension reloads HTML pages
  * and content scripts correctly.
  */
-export const noopBackground = (): Plugin => {
+export function noopBackground(): Plugin {
   const virtualModuleId = VIRTUAL_NOOP_BACKGROUND_MODULE_ID;
   const resolvedVirtualModuleId = '\0' + virtualModuleId;
   return {
@@ -29,4 +29,4 @@ export const noopBackground = (): Plugin => {
       },
     },
   };
-};
+}

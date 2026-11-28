@@ -1,13 +1,13 @@
 import type { PluginVisualizerOptions } from '@aklinker1/rollup-plugin-visualizer';
 import type { Browser } from '@wxt-dev/browser';
-import type { ResolvedConfig as C12ResolvedConfig } from 'c12';
-import type { LogLevel } from 'consola';
-import type { Hookable, NestedHooks } from 'hookable';
+import { ResolvedConfig as C12ResolvedConfig } from 'c12';
+import { LogLevel } from 'consola';
+import { Hookable, NestedHooks } from 'hookable';
 import type * as Nypm from 'nypm';
-import type { Import, UnimportOptions } from 'unimport';
+import { Import, UnimportOptions } from 'unimport';
 import type * as vite from 'vite';
 
-import type { ManifestContentScript } from './internal-utils/type-utils';
+import { ManifestContentScript } from './internal-utils/type-utils';
 import type { ContentScriptContext } from './utils/content-script-context';
 
 export interface InlineConfig {

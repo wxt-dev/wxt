@@ -3,14 +3,12 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { MockProxy } from 'vitest-mock-extended';
-import { mock } from 'vitest-mock-extended';
-import type { WebExtRunInstance } from 'web-ext';
-import webExt from 'web-ext';
+import { mock, MockProxy } from 'vitest-mock-extended';
+import webExt, { WebExtRunInstance } from 'web-ext';
 import logger from 'web-ext/util/logger';
 
 import { setFakeWxt } from '../../../internal-utils/testing/fake-objects';
-import type { WebExtConfig } from '../../../types';
+import { WebExtConfig } from '../../../types';
 import { WebExtRunner } from '../web-ext';
 
 const DEFAULT_IS_WSL = false;
@@ -43,11 +41,11 @@ vi.mock('web-ext/util/logger', () => ({
 }));
 
 describe('WebExtRunner', () => {
-  const setupRunner = () => {
+  function setupRunner() {
     return new WebExtRunner(webExt, logger, setupWxt().config);
-  };
+  }
 
-  const setupWxt = () => {
+  function setupWxt() {
     return setFakeWxt({
       config: {
         browser: targetBrowser,
@@ -56,7 +54,7 @@ describe('WebExtRunner', () => {
         },
       },
     });
-  };
+  }
 
   beforeEach(() => {
     isWsl = DEFAULT_IS_WSL;
@@ -65,10 +63,10 @@ describe('WebExtRunner', () => {
   });
 
   describe('canOpen', () => {
-    const canOpen = async () => {
+    async function canOpen() {
       const runner = setupRunner();
       return await runner.canOpen();
-    };
+    }
 
     it('should return true', async () => {
       expect(await canOpen()).toBe(true);
@@ -76,13 +74,13 @@ describe('WebExtRunner', () => {
   });
 
   describe('openBrowser', () => {
-    const openBrowser = async () => {
+    async function openBrowser() {
       const runner = setupRunner();
       await runner.openBrowser();
-    };
-    const expectNothing = () => {
+    }
+    function expectNothing() {
       expect(webExtCmdRunMock).not.toHaveBeenCalled();
-    };
+    }
 
     describe('when in WSL', () => {
       beforeEach(() => {
@@ -176,9 +174,9 @@ describe('WebExtRunner', () => {
   });
 
   describe('closeBrowser', () => {
-    const closeBrowser = async (runner: WebExtRunner = setupRunner()) => {
+    async function closeBrowser(runner: WebExtRunner = setupRunner()) {
       await runner.closeBrowser();
-    };
+    }
     let instance: MockProxy<WebExtRunInstance>;
 
     beforeEach(() => {

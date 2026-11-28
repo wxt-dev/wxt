@@ -2,7 +2,7 @@
 import { createIsolatedElement } from '@webext-core/isolated-element';
 import { browser } from 'wxt/browser';
 
-import type { ContentScriptContext } from '../content-script-context';
+import { ContentScriptContext } from '../content-script-context';
 import { logger } from '../internal/logger';
 import { splitShadowRootCss } from '../split-shadow-root-css';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
@@ -18,10 +18,10 @@ import type { ContentScriptUi, ContentScriptUiOptions } from './types';
  *   shared positioning, anchoring, `append`, and removal options.
  * @see https://wxt.dev/guide/essentials/content-scripts.html#shadow-root
  */
-export const createShadowRootUi = async <TMounted>(
+export async function createShadowRootUi<TMounted>(
   ctx: ContentScriptContext,
   options: ShadowRootContentScriptUiOptions<TMounted>,
-): Promise<ShadowRootContentScriptUi<TMounted>> => {
+): Promise<ShadowRootContentScriptUi<TMounted>> {
   const instanceId = Math.random().toString(36).substring(2, 15);
   const css: string[] = [];
 
@@ -117,10 +117,10 @@ export const createShadowRootUi = async <TMounted>(
       return mounted;
     },
   };
-};
+}
 
 /** Load the CSS for the current entrypoint. */
-const loadCss = async (): Promise<string> => {
+async function loadCss(): Promise<string> {
   const url = browser.runtime
     // @ts-expect-error: getURL is defined per-project, but not inside the package
     .getURL(`/content-scripts/${import.meta.env.ENTRYPOINT}.css`);
@@ -134,7 +134,7 @@ const loadCss = async (): Promise<string> => {
     );
     return '';
   }
-};
+}
 
 export interface ShadowRootContentScriptUi<
   TMounted,

@@ -1,8 +1,8 @@
-import type { ContentScriptEntrypoint, Entrypoint } from '../types';
+import { ContentScriptEntrypoint, Entrypoint } from '../types';
 
-export const validateEntrypoints = (
+export function validateEntrypoints(
   entrypoints: Entrypoint[],
-): ValidationResults => {
+): ValidationResults {
   const errors = entrypoints.flatMap((entrypoint) => {
     switch (entrypoint.type) {
       case 'content-script':
@@ -24,11 +24,11 @@ export const validateEntrypoints = (
     errorCount,
     warningCount,
   };
-};
+}
 
-const validateContentScriptEntrypoint = (
+function validateContentScriptEntrypoint(
   definition: ContentScriptEntrypoint,
-): ValidationResult[] => {
+): ValidationResult[] {
   const errors = validateBaseEntrypoint(definition);
   if (
     definition.options.registration !== 'runtime' &&
@@ -42,9 +42,9 @@ const validateContentScriptEntrypoint = (
     });
   }
   return errors;
-};
+}
 
-const validateBaseEntrypoint = (definition: Entrypoint): ValidationResult[] => {
+function validateBaseEntrypoint(definition: Entrypoint): ValidationResult[] {
   const errors: ValidationResult[] = [];
 
   if (
@@ -71,7 +71,7 @@ const validateBaseEntrypoint = (definition: Entrypoint): ValidationResult[] => {
   }
 
   return errors;
-};
+}
 
 export interface ValidationResult {
   type: 'warning' | 'error';

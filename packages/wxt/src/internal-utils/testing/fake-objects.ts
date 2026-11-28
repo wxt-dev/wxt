@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 
 import { setWxtForTesting } from '../../internal/wxt';
-import type {
+import {
   FsCache,
   ResolvedConfig,
   WxtDevServer,
@@ -28,36 +28,36 @@ import type {
 
 // Seeded PRNG (mulberry32) so failures can be reproduced with the same seed.
 let seedState = __TEST_SEED__ >>> 0;
-const random = (): number => {
+function random(): number {
   seedState = (seedState + 0x6d2b79f5) >>> 0;
   let t = seedState;
   t = Math.imul(t ^ (t >>> 15), t | 1);
   t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
+}
 
 const ALPHA = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const ALPHANUMERIC = ALPHA + '0123456789';
 const FIRST_NAMES = ['Alex', 'Blake', 'Casey', 'Drew', 'Emery', 'Finley'];
 const LAST_NAMES = ['Adams', 'Brooks', 'Chen', 'Dunn', 'Evans', 'Fischer'];
 
-const randomBoolean = (): boolean => {
+function randomBoolean(): boolean {
   return random() < 0.5;
-};
+}
 
-const randomInt = (min = 0, max = Number.MAX_SAFE_INTEGER): number => {
+function randomInt(min = 0, max = Number.MAX_SAFE_INTEGER): number {
   return min + Math.floor(random() * (max - min + 1));
-};
+}
 
-const arrayElement = <T>(array: readonly T[]): T => {
+function arrayElement<T>(array: readonly T[]): T {
   return array[randomInt(0, array.length - 1)];
-};
+}
 
-const randomString = (chars: string, length: number): string => {
+function randomString(chars: string, length: number): string {
   let result = '';
   for (let i = 0; i < length; i++) result += arrayElement([...chars]);
   return result;
-};
+}
 
 const randomAlpha = (length = 1) => randomString(ALPHA, length);
 const randomAlphanumeric = (length = 1) => randomString(ALPHANUMERIC, length);
@@ -75,12 +75,12 @@ type DeepPartial<T> = T extends object
 
 // Not using `@aklinker1/zero-factory` or similar because bases contain mocks
 // (`vi.fn()`, `mock()`) that must be kept as-is, not called or recursed into.
-const isPlainObject = (value: unknown): value is Record<string, any> => {
+function isPlainObject(value: unknown): value is Record<string, any> {
   if (value == null || typeof value !== 'object') return false;
   const proto = Object.getPrototypeOf(value);
   return proto === Object.prototype || proto === null;
-};
-const deepMerge = (base: any, overrides: any): any => {
+}
+function deepMerge(base: any, overrides: any): any {
   if (!isPlainObject(base) || !isPlainObject(overrides))
     return overrides === undefined ? base : overrides;
   // Mutate `base` instead of copying so mocks (proxies) keep their behavior
@@ -88,22 +88,22 @@ const deepMerge = (base: any, overrides: any): any => {
     base[key] = deepMerge(base[key], overrides[key]);
   }
   return base;
-};
-const fakeObjectCreator = <T>(base: () => T) => {
+}
+function fakeObjectCreator<T>(base: () => T) {
   return (overrides?: DeepPartial<T>): T => deepMerge(base(), overrides);
-};
+}
 
-export const fakeFileName = (): string => {
+export function fakeFileName(): string {
   return randomAlphanumeric() + '.' + randomAlpha(3);
-};
+}
 
-export const fakeFile = (root = process.cwd()): string => {
+export function fakeFile(root = process.cwd()): string {
   return resolve(root, fakeFileName());
-};
+}
 
-export const fakeDir = (root = process.cwd()): string => {
+export function fakeDir(root = process.cwd()): string {
   return resolve(root, randomAlphanumeric());
-};
+}
 
 export const fakeEntrypoint = (options?: DeepPartial<BaseEntrypoint>) =>
   arrayElement([
@@ -258,13 +258,13 @@ export const fakeUserManifest = fakeObjectCreator<UserManifest>(() => ({
   version: `${randomInt()}.${randomInt()}.${randomInt()}`,
 }));
 
-export const fakeArray = <T>(createItem: () => T, count = 3): T[] => {
+export function fakeArray<T>(createItem: () => T, count = 3): T[] {
   const array: T[] = [];
   for (let i = 0; i < count; i++) {
     array.push(createItem());
   }
   return array;
-};
+}
 
 export const fakeResolvedConfig = fakeObjectCreator<ResolvedConfig>(() => {
   const browser = arrayElement(['chrome', 'firefox']);
@@ -385,11 +385,11 @@ export const fakeWxtDevServer = fakeObjectCreator<WxtDevServer>(() => ({
   ws: mock(),
 }));
 
-export const setFakeWxt = (overrides?: DeepPartial<Wxt>) => {
+export function setFakeWxt(overrides?: DeepPartial<Wxt>) {
   const wxt = fakeWxt(overrides);
   setWxtForTesting(wxt);
   return wxt;
-};
+}
 
 export const fakeBuildOutput = fakeObjectCreator<BuildOutput>(() => ({
   manifest: fakeManifest(),

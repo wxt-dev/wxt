@@ -2,10 +2,10 @@ import dns from 'node:dns';
 
 import consola from 'consola';
 
-import type { ResolvedConfig } from '../types';
+import { ResolvedConfig } from '../types';
 import { withTimeout } from './time-utils';
 
-const isOffline = async (): Promise<boolean> => {
+async function isOffline(): Promise<boolean> {
   try {
     const isOffline = new Promise<boolean>((res) => {
       dns.resolve('google.com', (err) => res(err != null));
@@ -15,21 +15,21 @@ const isOffline = async (): Promise<boolean> => {
     consola.error('Error checking offline status:', error);
     return true;
   }
-};
+}
 
-export const isOnline = async (): Promise<boolean> => {
+export async function isOnline(): Promise<boolean> {
   const offline = await isOffline();
   return !offline;
-};
+}
 
 /**
  * Fetches a URL with a simple GET request. Grabs it from cache if it doesn't
  * exist, or throws an error if it can't be resolved via the network or cache.
  */
-export const fetchCached = async (
+export async function fetchCached(
   url: string,
   config: ResolvedConfig,
-): Promise<string> => {
+): Promise<string> {
   let content: string = '';
 
   if (await isOnline()) {
@@ -51,4 +51,4 @@ export const fetchCached = async (
     );
 
   return content;
-};
+}

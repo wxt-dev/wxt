@@ -10,11 +10,12 @@ import { isCI } from '../internal-utils/env-utils';
 import { printBuildSummary } from '../internal-utils/log';
 import { unnormalizePath } from '../internal-utils/path-utils';
 import { formatDuration } from '../internal-utils/time-utils';
-import type {
+import {
+  ValidationError,
   ValidationResult,
   ValidationResults,
+  validateEntrypoints,
 } from '../internal/validation';
-import { ValidationError, validateEntrypoints } from '../internal/validation';
 import { wxt } from '../internal/wxt';
 import type { BuildOutput, Entrypoint } from '../types';
 import { findEntrypoints } from './find-entrypoints';
@@ -32,7 +33,7 @@ import { rebuild } from './rebuild';
  *    built (see `rebuild` for more details)
  * 3. Prints the summary
  */
-export const internalBuild = async (): Promise<BuildOutput> => {
+export async function internalBuild(): Promise<BuildOutput> {
   await wxt.hooks.callHook('build:before', wxt);
 
   const verb = wxt.config.command === 'serve' ? 'Pre-rendering' : 'Building';
@@ -100,9 +101,9 @@ export const internalBuild = async (): Promise<BuildOutput> => {
   }
 
   return output;
-};
+}
 
-const combineAnalysisStats = async (): Promise<void> => {
+async function combineAnalysisStats(): Promise<void> {
   const unixFiles = await glob(`${wxt.config.analysis.outputName}-*.json`, {
     cwd: wxt.config.analysis.outputDir,
     absolute: true,
@@ -121,13 +122,13 @@ const combineAnalysisStats = async (): Promise<void> => {
       absolutePaths.map((statsFile) => rm(statsFile, { force: true })),
     );
   }
-};
+}
 
-const printValidationResults = ({
+function printValidationResults({
   errorCount,
   errors,
   warningCount,
-}: ValidationResults) => {
+}: ValidationResults) {
   (errorCount > 0 ? wxt.logger.error : wxt.logger.warn)(
     `Entrypoint validation failed: ${errorCount} error${
       errorCount === 1 ? '' : 's'
@@ -158,4 +159,4 @@ const printValidationResults = ({
     });
     console.log();
   });
-};
+}

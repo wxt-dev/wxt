@@ -4,11 +4,11 @@ import { describe } from 'vitest';
 
 import { isCI } from '../env-utils';
 
-export const describeWithBin = (
+export function describeWithBin(
   bin: string,
   title: string,
   callback: () => void,
-) => {
+) {
   if (isCI()) return describe(title, callback);
 
   const result = spawnSync(bin, ['--version'], {
@@ -17,4 +17,4 @@ export const describeWithBin = (
   });
   if (result.status !== 0) return describe.skip(title, callback);
   return describe(title, callback);
-};
+}

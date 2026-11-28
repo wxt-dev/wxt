@@ -3,13 +3,13 @@ import { resolve } from 'node:path';
 import type * as vite from 'vite';
 
 import { pathExists } from '../../../../internal-utils/fs-utils';
-import type { ResolvedConfig } from '../../../../types';
+import { ResolvedConfig } from '../../../../types';
 
 /**
  * When importing `virtual:app-config`, resolve it to the `app.config.ts` file
  * in the project.
  */
-export const resolveAppConfig = (config: ResolvedConfig): vite.Plugin => {
+export function resolveAppConfig(config: ResolvedConfig): vite.Plugin {
   const virtualModuleId = 'virtual:app-config';
   const resolvedVirtualModuleId = '\0' + virtualModuleId;
   const appConfigFile = resolve(config.srcDir, 'app.config.ts');
@@ -44,4 +44,4 @@ export const resolveAppConfig = (config: ResolvedConfig): vite.Plugin => {
       },
     },
   };
-};
+}

@@ -29,9 +29,9 @@ const hooks: WxtHooks = {
   'server:closed': vi.fn(),
 };
 
-const expectHooksToBeCalled = (
+function expectHooksToBeCalled(
   called: Record<keyof WxtHooks, boolean | number>,
-) => {
+) {
   Object.keys(hooks).forEach((key) => {
     const hookName = key as keyof WxtHooks;
     const value = called[hookName];
@@ -41,7 +41,7 @@ const expectHooksToBeCalled = (
       `Expected "${hookName}" to be called ${times} time(s)`,
     ).toBeCalledTimes(times);
   });
-};
+}
 
 describe('Hooks', () => {
   beforeEach(() => {

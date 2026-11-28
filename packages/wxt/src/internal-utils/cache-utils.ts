@@ -1,7 +1,7 @@
 import { mkdir, readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'path';
 
-import type { FsCache } from '../types';
+import { FsCache } from '../types';
 import { writeFileIfDifferent } from './fs-utils';
 
 /**
@@ -10,7 +10,7 @@ import { writeFileIfDifferent } from './fs-utils';
  *
  * @param srcDir Absolute path to source directory. See `InternalConfig.srcDir`
  */
-export const createFsCache = (wxtDir: string): FsCache => {
+export function createFsCache(wxtDir: string): FsCache {
   const getPath = (key: string) =>
     resolve(wxtDir, 'cache', encodeURIComponent(key));
 
@@ -29,4 +29,4 @@ export const createFsCache = (wxtDir: string): FsCache => {
       }
     },
   };
-};
+}

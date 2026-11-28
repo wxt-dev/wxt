@@ -9,23 +9,6 @@ export default defineConfig([
   {
     files: ['**/*.{ts,tsx,mts,cts}'],
     languageOptions: { parser: tseslint.parser },
-    plugins: {
-      '@typescript-eslint': tseslint.plugin,
-    },
-    rules: {
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          disallowTypeAnnotations: false,
-          prefer: 'type-imports',
-          fixStyle: 'separate-type-imports',
-        },
-      ],
-      'func-style': ['error', 'expression'],
-      'prefer-arrow-callback': 'error',
-      'no-var': 'error',
-      'prefer-const': 'error',
-    },
   },
   autoImports,
   {

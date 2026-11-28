@@ -1,7 +1,7 @@
 import { x as spawn } from 'tinyexec';
 
 import { dedupeDependencies, npm } from './npm';
-import type { WxtPackageManagerImpl } from './types';
+import { WxtPackageManagerImpl } from './types';
 
 export const bun: WxtPackageManagerImpl = {
   overridesKey: 'overrides', // But also supports "resolutions"

@@ -3,12 +3,12 @@ import { LogLevels, consola } from 'consola';
 import { printHeader } from './log';
 import { formatDuration } from './time-utils';
 
-export const defineCommand = <TArgs extends any[]>(
+export function defineCommand<TArgs extends any[]>(
   cb: (...args: TArgs) => void | boolean | Promise<void | boolean>,
   options?: {
     disableFinishedLog?: boolean;
   },
-) => {
+) {
   return async (...args: TArgs) => {
     // Enable consola's debug mode globally at the start of all commands when
     // the `--debug` flag is passed
@@ -35,4 +35,4 @@ export const defineCommand = <TArgs extends any[]>(
       process.exit(1);
     }
   };
-};
+}

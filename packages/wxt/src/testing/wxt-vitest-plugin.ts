@@ -15,7 +15,7 @@ import {
   resolveAppConfig,
 } from '../internal/builders/vite/plugins';
 import { registerWxt, wxt } from '../internal/wxt';
-import type { InlineConfig } from '../types';
+import { InlineConfig } from '../types';
 
 /**
  * Vite plugin that configures Vitest with everything required to test a WXT
@@ -34,9 +34,9 @@ import type { InlineConfig } from '../types';
  * @param inlineConfig Customize WXT's config for testing. Any config specified
  *   here overrides the config from your `wxt.config.ts` file.
  */
-export const WxtVitest = async (
+export async function WxtVitest(
   inlineConfig?: InlineConfig,
-): Promise<vite.PluginOption[]> => {
+): Promise<vite.PluginOption[]> {
   await registerWxt('serve', inlineConfig ?? {});
 
   const plugins: vite.PluginOption[] = [
@@ -48,4 +48,4 @@ export const WxtVitest = async (
   plugins.push(UnimportPlugin.vite(wxt.config.imports));
 
   return plugins;
-};
+}

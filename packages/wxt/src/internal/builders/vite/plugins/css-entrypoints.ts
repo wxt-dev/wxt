@@ -1,7 +1,7 @@
 import type * as vite from 'vite';
 
 import { getEntrypointBundlePath } from '../../../../internal-utils/entrypoint-utils';
-import type { Entrypoint, ResolvedConfig } from '../../../../types';
+import { Entrypoint, ResolvedConfig } from '../../../../types';
 
 /**
  * Rename CSS entrypoint outputs to ensure a JS file is not generated, and that
@@ -15,10 +15,10 @@ import type { Entrypoint, ResolvedConfig } from '../../../../types';
  * THIS PLUGIN SHOULD ONLY BE APPLIED TO CSS LIB MODE BUILDS. It should not be
  * added to every build.
  */
-export const cssEntrypoints = (
+export function cssEntrypoints(
   entrypoint: Entrypoint,
   config: ResolvedConfig,
-): vite.Plugin => {
+): vite.Plugin {
   return {
     name: 'wxt:css-entrypoint',
     config() {
@@ -39,4 +39,4 @@ export const cssEntrypoints = (
       });
     },
   };
-};
+}

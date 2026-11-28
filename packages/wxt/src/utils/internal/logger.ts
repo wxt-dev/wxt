@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-const print = (method: (...args: any[]) => void, ...args: any[]) => {
+function print(method: (...args: any[]) => void, ...args: any[]) {
   if (import.meta.env.MODE === 'production') return;
 
   if (typeof args[0] === 'string') {
@@ -9,7 +9,7 @@ const print = (method: (...args: any[]) => void, ...args: any[]) => {
   } else {
     method('[wxt]', ...args);
   }
-};
+}
 
 /** Wrapper around `console` with a "[wxt]" prefix */
 export const logger = {

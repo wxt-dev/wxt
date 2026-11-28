@@ -5,12 +5,18 @@ import { dirname, relative, resolve } from 'path';
 import { glob } from 'tinyglobby';
 import * as vite from 'vite';
 
-import type { InlineConfig, UserConfig, WxtCommand } from '../src';
-import { build, createServer, prepare, zip } from '../src';
+import {
+  InlineConfig,
+  UserConfig,
+  WxtCommand,
+  build,
+  createServer,
+  prepare,
+  zip,
+} from '../src';
 import { pathExists, readJson } from '../src/internal-utils/fs-utils';
 import { normalizePath } from '../src/internal-utils/path-utils';
-import type { ExecResult } from '../src/internal-utils/testing/exec';
-import { exec } from '../src/internal-utils/testing/exec';
+import { exec, ExecResult } from '../src/internal-utils/testing/exec';
 import { registerWxt } from '../src/internal/wxt';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the
@@ -255,7 +261,7 @@ export class TestProject {
 }
 
 /** Starts a TCP server on the given port and returns a cleanup function. */
-export const occupyPort = (port: number): Promise<() => Promise<void>> => {
+export function occupyPort(port: number): Promise<() => Promise<void>> {
   return new Promise((resolve, reject) => {
     const srv = createNetServer();
     srv.listen(port, 'localhost', () => {
@@ -263,4 +269,4 @@ export const occupyPort = (port: number): Promise<() => Promise<void>> => {
     });
     srv.on('error', reject);
   });
-};
+}

@@ -28,7 +28,7 @@ export interface WxtWebSocket extends WebSocket {
 let ws: WxtWebSocket | undefined;
 
 /** Connect to the websocket and listen for messages. */
-export const getDevServerWebSocket = (): WxtWebSocket => {
+export function getDevServerWebSocket(): WxtWebSocket {
   if (import.meta.env.COMMAND !== 'serve')
     throw Error(
       'Must be running WXT dev command to connect to call getDevServerWebSocket()',
@@ -68,7 +68,7 @@ export const getDevServerWebSocket = (): WxtWebSocket => {
   }
 
   return ws;
-};
+}
 
 export interface ReloadContentScriptPayload {
   registration?: 'manifest' | 'runtime';

@@ -41,7 +41,7 @@ const predefinedMessages = {
  *
  * @param messagesJson The contents of a `_locales/en/messages.json` file.
  */
-export const parseI18nMessages = (messagesJson: object): Message[] => {
+export function parseI18nMessages(messagesJson: object): Message[] {
   return Object.entries({
     ...predefinedMessages,
     ...messagesJson,
@@ -49,4 +49,4 @@ export const parseI18nMessages = (messagesJson: object): Message[] => {
     name,
     ...details,
   }));
-};
+}

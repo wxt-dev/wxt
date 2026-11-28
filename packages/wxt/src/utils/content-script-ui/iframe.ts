@@ -1,7 +1,7 @@
 /** @module wxt/utils/content-script-ui/iframe */
 import { browser } from 'wxt/browser';
 
-import type { ContentScriptContext } from '../content-script-context';
+import { ContentScriptContext } from '../content-script-context';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
 import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 
@@ -12,10 +12,10 @@ import type { ContentScriptUi, ContentScriptUiOptions } from './types';
  *   shared positioning, anchoring, `append`, and removal options.
  * @see https://wxt.dev/guide/essentials/content-scripts.html#iframe
  */
-export const createIframeUi = <TMounted>(
+export function createIframeUi<TMounted>(
   ctx: ContentScriptContext,
   options: IframeContentScriptUiOptions<TMounted>,
-): IframeContentScriptUi<TMounted> => {
+): IframeContentScriptUi<TMounted> {
   const wrapper = document.createElement('div');
   const iframe = document.createElement('iframe');
   // @ts-expect-error: getURL is defined per-project, but not inside the package
@@ -47,7 +47,7 @@ export const createIframeUi = <TMounted>(
     wrapper,
     ...mountFunctions,
   };
-};
+}
 
 export interface IframeContentScriptUi<
   TMounted,

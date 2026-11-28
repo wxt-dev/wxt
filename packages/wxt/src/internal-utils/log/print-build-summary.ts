@@ -1,14 +1,14 @@
 import { resolve } from 'path';
 
 import { wxt } from '../../internal/wxt';
-import type { BuildOutput } from '../../types';
+import { BuildOutput } from '../../types';
 import { printFileList } from './print-file-list';
 
-export const printBuildSummary = async (
+export async function printBuildSummary(
   log: (...args: any[]) => void,
   header: string,
   output: BuildOutput,
-) => {
+) {
   const chunks = [
     ...output.steps.flatMap((step) => step.chunks),
     ...output.publicAssets,
@@ -24,7 +24,7 @@ export const printBuildSummary = async (
     resolve(wxt.config.outDir, chunk.fileName),
   );
   await printFileList(log, header, wxt.config.outDir, files);
-};
+}
 
 const DEFAULT_SORT_WEIGHT = 100;
 const CHUNK_SORT_WEIGHTS: Record<string, number> = {
@@ -34,10 +34,10 @@ const CHUNK_SORT_WEIGHTS: Record<string, number> = {
   '.js': 2,
   '.css': 3,
 };
-const getChunkSortWeight = (filename: string) => {
+function getChunkSortWeight(filename: string) {
   return (
     Object.entries(CHUNK_SORT_WEIGHTS).find(([key]) =>
       filename.endsWith(key),
     )?.[1] ?? DEFAULT_SORT_WEIGHT
   );
-};
+}

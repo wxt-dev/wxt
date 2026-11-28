@@ -1,11 +1,11 @@
 import type * as vite from 'vite';
 
-import type { ResolvedConfig } from '../../../../types';
+import { ResolvedConfig } from '../../../../types';
 import { getRuntimeEnvEntries } from '../../../runtime-env-entries';
 
-export const addRuntimeEnvEntries = (
+export function addRuntimeEnvEntries(
   config: ResolvedConfig,
-): vite.PluginOption => {
+): vite.PluginOption {
   return {
     name: 'wxt:add-runtime-env-entries',
     config() {
@@ -18,4 +18,4 @@ export const addRuntimeEnvEntries = (
       };
     },
   };
-};
+}

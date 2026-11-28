@@ -6,12 +6,12 @@ import dotenvExpand from 'dotenv-expand';
 import type { TargetBrowser } from '../types';
 
 /** Returns true when running in a CI environment. */
-export const isCI = (): boolean => {
+export function isCI(): boolean {
   return !!process.env.CI && process.env.CI !== 'false';
-};
+}
 
 /** Load environment files based on the current mode and browser. */
-export const loadEnv = (mode: string, browser: TargetBrowser) => {
+export function loadEnv(mode: string, browser: TargetBrowser) {
   const envFiles = [
     // List is ordered with general files first, specific ones last, so the more
     // specific files override the more general ones in the loop below.
@@ -44,4 +44,4 @@ export const loadEnv = (mode: string, browser: TargetBrowser) => {
   });
 
   return parsed;
-};
+}

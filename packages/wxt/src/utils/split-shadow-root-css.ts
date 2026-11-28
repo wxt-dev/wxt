@@ -12,12 +12,10 @@ const AT_RULE_BLOCKS = /(\s*@(property|font-face)[\s\S]*?{[\s\S]*?})/gm;
  *
  * @param css
  */
-export const splitShadowRootCss = (
-  css: string,
-): {
+export function splitShadowRootCss(css: string): {
   documentCss: string;
   shadowCss: string;
-} => {
+} {
   const documentCss = Array.from(css.matchAll(AT_RULE_BLOCKS), (m) => m[0])
     .join('')
     .trim();
@@ -27,4 +25,4 @@ export const splitShadowRootCss = (
     documentCss: documentCss,
     shadowCss: shadowCss,
   };
-};
+}

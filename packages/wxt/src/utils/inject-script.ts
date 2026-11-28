@@ -18,10 +18,10 @@ export type ScriptPublicPath = Extract<
  *
  * @returns A result object containing the created script element.
  */
-export const injectScript = async (
+export async function injectScript(
   path: ScriptPublicPath,
   options?: InjectScriptOptions,
-): Promise<InjectScriptResult> => {
+): Promise<InjectScriptResult> {
   // @ts-expect-error: getURL is defined per-project, but not inside the package
   const url = browser.runtime.getURL(path);
   const script = document.createElement('script');
@@ -53,9 +53,9 @@ export const injectScript = async (
   return {
     script,
   };
-};
+}
 
-const makeLoadedPromise = (script: HTMLScriptElement): Promise<void> => {
+function makeLoadedPromise(script: HTMLScriptElement): Promise<void> {
   return new Promise((resolve, reject) => {
     const onload = () => {
       resolve();
@@ -75,7 +75,7 @@ const makeLoadedPromise = (script: HTMLScriptElement): Promise<void> => {
     script.addEventListener('load', onload);
     script.addEventListener('error', onerror);
   });
-};
+}
 
 export interface InjectScriptOptions {
   /**

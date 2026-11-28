@@ -1,6 +1,5 @@
-import type { CAC, Command } from 'cac';
-import type { LogType } from 'consola';
-import consola, { LogLevels } from 'consola';
+import { CAC, Command } from 'cac';
+import consola, { LogLevels, LogType } from 'consola';
 import { x as spawn } from 'tinyexec';
 
 import { filterTruthy, toArray } from '../internal-utils/array-utils';
@@ -13,14 +12,14 @@ import { registerWxt } from '../internal/wxt';
  * Wrap an action handler to add a timer, error handling, and maybe enable debug
  * mode.
  */
-export const wrapAction = (
+export function wrapAction(
   cb: (
     ...args: any[]
   ) => void | { isOngoing?: boolean } | Promise<void | { isOngoing?: boolean }>,
   options?: {
     disableFinishedLog?: boolean;
   },
-) => {
+) {
   return async (...args: any[]) => {
     const level: LogType | undefined = args.find((arg) => arg?.level)?.level;
     if (level && Object.keys(LogLevels).includes(level)) {
@@ -54,20 +53,20 @@ export const wrapAction = (
       process.exit(1);
     }
   };
-};
+}
 
 /**
  * Array flags, when not passed, are either `undefined` or `[undefined]`. This
  * function filters out the
  */
-export const getArrayFromFlags = <T>(
+export function getArrayFromFlags<T>(
   flags: any,
   name: string,
-): T[] | undefined => {
+): T[] | undefined {
   const array = toArray<T | undefined>(flags[name]);
   const result = filterTruthy(array);
   return result.length ? result : undefined;
-};
+}
 
 const aliasCommandNames = new Set<string>();
 /**
@@ -77,13 +76,13 @@ const aliasCommandNames = new Set<string>();
  * @param bin The CLI tool binary name. Usually the same as the alias
  * @param docsUrl URL to the docs for the aliased CLI tool
  */
-export const createAliasedCommand = (
+export function createAliasedCommand(
   base: CAC,
   name: string,
   alias: string,
   bin: string,
   docsUrl: string,
-) => {
+) {
   // Declare a variadic positional arg so cac forwards subcommands like `wxt
   // submit init` instead of rejecting them as unused args. `.allowUnknownOptions`
   // only relaxes flag checks, not positional args. Required since cac@7, which
@@ -108,7 +107,7 @@ export const createAliasedCommand = (
       }
     });
   aliasCommandNames.add(aliasedCommand.name);
-};
-export const isAliasedCommand = (command: Command | undefined): boolean => {
+}
+export function isAliasedCommand(command: Command | undefined): boolean {
   return !!command && aliasCommandNames.has(command.name);
-};
+}

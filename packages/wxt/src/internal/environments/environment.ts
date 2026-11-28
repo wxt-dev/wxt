@@ -3,9 +3,7 @@ export interface Environment {
   run: <T>(fn: () => Promise<T>) => Promise<T>;
 }
 
-export const createEnvironment = (
-  getGlobals: () => EnvGlobals,
-): Environment => {
+export function createEnvironment(getGlobals: () => EnvGlobals): Environment {
   const setup = () => {
     const envGlobals = getGlobals();
     const ogGlobals = getOgGlobals(envGlobals);
@@ -27,19 +25,19 @@ export const createEnvironment = (
     setup,
     run,
   };
-};
+}
 
 export type EnvGlobals = Record<string, any>;
 
-export const getOgGlobals = (envGlobals: EnvGlobals): EnvGlobals => {
+export function getOgGlobals(envGlobals: EnvGlobals): EnvGlobals {
   return Object.keys(envGlobals).reduce<typeof envGlobals>((acc, key) => {
     // @ts-expect-error: Untyped key on globalThis
     acc[key] = globalThis[key];
     return acc;
   }, {});
-};
+}
 
-export const applyGlobals = (globals: EnvGlobals): void => {
+export function applyGlobals(globals: EnvGlobals): void {
   Object.entries(globals).forEach(([key, envValue]) => {
     try {
       // @ts-expect-error: Untyped key on globalThis
@@ -48,4 +46,4 @@ export const applyGlobals = (globals: EnvGlobals): void => {
       // ignore any globals that can't be set
     }
   });
-};
+}

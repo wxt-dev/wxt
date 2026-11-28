@@ -16,7 +16,7 @@ import {
   fakeWxtDevServer,
   setFakeWxt,
 } from '../../internal-utils/testing/fake-objects';
-import type {
+import {
   BuildOutput,
   ContentScriptEntrypoint,
   Entrypoint,

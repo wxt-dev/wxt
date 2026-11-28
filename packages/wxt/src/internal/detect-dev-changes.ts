@@ -1,6 +1,6 @@
 import { every, some } from '../internal-utils/array-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import type {
+import {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,
@@ -41,10 +41,10 @@ import { wxt } from './wxt';
  *   - Modules/* (any file related to WXT modules)
  *   - .env (environment variable changed could effect build)
  */
-export const detectDevChanges = (
+export function detectDevChanges(
   changedFiles: string[],
   currentOutput: BuildOutput,
-): DevModeChange => {
+): DevModeChange {
   const relevantChangedFiles = getRelevantDevChangedFiles(
     changedFiles,
     currentOutput,
@@ -137,12 +137,12 @@ export const detectDevChanges = (
     cachedOutput: unchangedOutput,
     rebuildGroups: changedOutput.steps.map((step) => step.entrypoints),
   };
-};
+}
 
-export const getRelevantDevChangedFiles = (
+export function getRelevantDevChangedFiles(
   changedFiles: string[],
   currentOutput: BuildOutput,
-): string[] => {
+): string[] {
   return Array.from(new Set(changedFiles)).filter((changedFile) => {
     if (changedFile === wxt.config.userConfigMetadata.configFile) return true;
     if (changedFile.startsWith(wxt.config.modulesDir)) return true;
@@ -150,16 +150,16 @@ export const getRelevantDevChangedFiles = (
     if (changedFile.startsWith(wxt.config.publicDir)) return true;
     return findEffectedSteps(changedFile, currentOutput).length > 0;
   });
-};
+}
 
 /**
  * For a single change, return all the step of the build output that were
  * effected by it.
  */
-const findEffectedSteps = (
+function findEffectedSteps(
   changedFile: string,
   currentOutput: BuildOutput,
-): BuildStepOutput[] => {
+): BuildStepOutput[] {
   const changes: BuildStepOutput[] = [];
   const changedPath = normalizePath(changedFile);
 
@@ -190,7 +190,7 @@ const findEffectedSteps = (
   }
 
   return changes;
-};
+}
 
 /**
  * Contains information about what files changed, what needs rebuilt, and the

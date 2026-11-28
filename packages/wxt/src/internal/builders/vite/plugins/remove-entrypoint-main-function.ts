@@ -3,17 +3,17 @@ import { resolve } from 'node:path';
 import type * as vite from 'vite';
 
 import { normalizePath } from '../../../../internal-utils/path-utils';
-import type { ResolvedConfig } from '../../../../types';
+import { ResolvedConfig } from '../../../../types';
 import { removeMainFunctionCode } from '../../../transform';
 
 /**
  * Transforms entrypoints, removing the main function from the entrypoint if it
  * exists.
  */
-export const removeEntrypointMainFunction = (
+export function removeEntrypointMainFunction(
   config: ResolvedConfig,
   path: string,
-): vite.Plugin => {
+): vite.Plugin {
   const absPath = normalizePath(resolve(config.root, path));
   return {
     name: 'wxt:remove-entrypoint-main-function',
@@ -31,4 +31,4 @@ export const removeEntrypointMainFunction = (
       },
     },
   };
-};
+}

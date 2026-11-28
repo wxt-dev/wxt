@@ -4,15 +4,15 @@ import { styleText } from 'node:util';
 
 import { wxt } from '../../internal/wxt';
 import { getBytesDisplay } from '../fs-utils';
-import type { TextStyle } from '../type-utils';
+import { TextStyle } from '../type-utils';
 import { printTable } from './print-table';
 
-export const printFileList = async (
+export async function printFileList(
   log: (message: string) => void,
   header: string,
   baseDir: string,
   files: string[],
-): Promise<void> => {
+): Promise<void> {
   let totalSize = 0;
 
   const fileRows: string[][] = await Promise.all(
@@ -46,7 +46,7 @@ export const printFileList = async (
   ]);
 
   printTable(log, header, fileRows);
-};
+}
 
 const DEFAULT_COLOR: TextStyle = 'blue';
 const CHUNK_COLORS: Record<string, TextStyle> = {
@@ -60,9 +60,9 @@ const CHUNK_COLORS: Record<string, TextStyle> = {
   '.mjs': 'cyan',
   '.zip': 'yellow',
 };
-const getChunkColor = (filename: string): TextStyle => {
+function getChunkColor(filename: string): TextStyle {
   return (
     Object.entries(CHUNK_COLORS).find(([key]) => filename.endsWith(key))?.[1] ??
     DEFAULT_COLOR
   );
-};
+}

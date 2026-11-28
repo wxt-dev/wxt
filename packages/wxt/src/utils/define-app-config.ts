@@ -18,6 +18,6 @@ export interface WxtAppConfig {}
  * }
  * ```
  */
-export const defineAppConfig = (config: WxtAppConfig): WxtAppConfig => {
+export function defineAppConfig(config: WxtAppConfig): WxtAppConfig {
   return config;
-};
+}

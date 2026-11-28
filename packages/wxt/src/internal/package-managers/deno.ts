@@ -1,4 +1,4 @@
-import type { WxtPackageManagerImpl } from './types';
+import { WxtPackageManagerImpl } from './types';
 
 export const deno: WxtPackageManagerImpl = {
   overridesKey: 'na',

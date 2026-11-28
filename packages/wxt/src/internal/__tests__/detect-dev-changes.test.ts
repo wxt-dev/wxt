@@ -13,9 +13,8 @@ import {
   fakeWxt,
   setFakeWxt,
 } from '../../internal-utils/testing/fake-objects';
-import type { BuildOutput, BuildStepOutput } from '../../types';
-import type { DevModeChange } from '../detect-dev-changes';
-import { detectDevChanges } from '../detect-dev-changes';
+import { BuildOutput, BuildStepOutput } from '../../types';
+import { DevModeChange, detectDevChanges } from '../detect-dev-changes';
 import { setWxtForTesting } from '../wxt';
 
 describe('Detect Dev Changes', () => {

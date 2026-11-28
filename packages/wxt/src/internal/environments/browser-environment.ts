@@ -1,13 +1,12 @@
 import { parseHTML } from 'linkedom';
 
-import type { Environment, EnvGlobals } from './environment';
-import { createEnvironment } from './environment';
+import { createEnvironment, Environment, EnvGlobals } from './environment';
 
-export const createBrowserEnvironment = (): Environment => {
+export function createBrowserEnvironment(): Environment {
   return createEnvironment(getBrowserEnvironmentGlobals);
-};
+}
 
-export const getBrowserEnvironmentGlobals = (): EnvGlobals => {
+export function getBrowserEnvironmentGlobals(): EnvGlobals {
   const { window, document, global } = parseHTML(`
     <html>
       <head></head>
@@ -24,13 +23,13 @@ export const getBrowserEnvironmentGlobals = (): EnvGlobals => {
     self: global,
     location,
   };
-};
+}
 
 /**
  * A read-only stand-in for `location`. There is no page to navigate at build
  * time, so `assign`, `reload` and `replace` do nothing rather than throw.
  */
-const createBuildTimeLocation = (href: string): Location => {
+function createBuildTimeLocation(href: string): Location {
   const url = new URL(href);
   return {
     ancestorOrigins: Object.assign([], {
@@ -51,4 +50,4 @@ const createBuildTimeLocation = (href: string): Location => {
     replace: () => {},
     toString: () => url.href,
   };
-};
+}

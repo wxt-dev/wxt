@@ -11,7 +11,7 @@ import {
   isJsEntrypoint,
   resolvePerBrowserOptions,
 } from '../internal-utils/entrypoint-utils';
-import type {
+import {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
   Entrypoint,
@@ -31,7 +31,7 @@ import { wxt } from './wxt';
  * Return entrypoints and their configuration by looking through the project's
  * files.
  */
-export const findEntrypoints = async (): Promise<Entrypoint[]> => {
+export async function findEntrypoints(): Promise<Entrypoint[]> {
   // Make sure required TSConfig file exists to load dependencies
   await mkdir(wxt.config.wxtDir, { recursive: true });
   try {
@@ -133,10 +133,10 @@ export const findEntrypoints = async (): Promise<Entrypoint[]> => {
   }
 
   return entrypoints;
-};
+}
 
 /** Returns a map of input paths to the file's options. */
-const importEntrypoints = async (infos: EntrypointInfo[]) => {
+async function importEntrypoints(infos: EntrypointInfo[]) {
   const resMap: Record<string, Record<string, any> | undefined> = {};
 
   const htmlInfos = infos.filter((info) => isHtmlEntrypoint(info));
@@ -160,15 +160,15 @@ const importEntrypoints = async (infos: EntrypointInfo[]) => {
   ]);
 
   return resMap;
-};
+}
 
 /**
  * Extract `manifest.` and `wxt.` options from meta tags, converting snake_case
  * keys to camelCase
  */
-const importHtmlEntrypoint = async (
+async function importHtmlEntrypoint(
   info: EntrypointInfo,
-): Promise<Record<string, any>> => {
+): Promise<Record<string, any>> {
   const content = await readFile(info.inputPath, 'utf-8');
   const { document } = parseHTML(content);
 
@@ -197,9 +197,9 @@ const importHtmlEntrypoint = async (
   });
 
   return res;
-};
+}
 
-const preventDuplicateEntrypointNames = (files: EntrypointInfo[]) => {
+function preventDuplicateEntrypointNames(files: EntrypointInfo[]) {
   const namesToPaths = files.reduce<Record<string, string[]>>(
     (map, { name, inputPath }) => {
       map[name] ??= [];
@@ -226,18 +226,18 @@ const preventDuplicateEntrypointNames = (files: EntrypointInfo[]) => {
       `Multiple entrypoints with the same name detected, only one entrypoint for each name is allowed.\n\n${errorContent}`,
     );
   }
-};
+}
 
-const preventNoEntrypoints = (files: EntrypointInfo[]) => {
+function preventNoEntrypoints(files: EntrypointInfo[]) {
   if (files.length === 0) {
     throw Error(`No entrypoints found in ${wxt.config.entrypointsDir}`);
   }
-};
+}
 
-const getPopupEntrypoint = async (
+async function getPopupEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
-): Promise<PopupEntrypoint> => {
+): Promise<PopupEntrypoint> {
   // Extract non-per-browser options
   const { themeIcons, title, type, ...perBrowserOptions } = options;
 
@@ -276,12 +276,12 @@ const getPopupEntrypoint = async (
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };
-};
+}
 
-const getOptionsEntrypoint = async (
+async function getOptionsEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
-): Promise<OptionsEntrypoint> => {
+): Promise<OptionsEntrypoint> {
   return {
     type: 'options',
     name: 'options',
@@ -289,12 +289,12 @@ const getOptionsEntrypoint = async (
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };
-};
+}
 
-const getUnlistedPageEntrypoint = async (
+async function getUnlistedPageEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
-): Promise<GenericEntrypoint> => {
+): Promise<GenericEntrypoint> {
   return {
     type: 'unlisted-page',
     name: info.name,
@@ -302,12 +302,12 @@ const getUnlistedPageEntrypoint = async (
     outputDir: wxt.config.outDir,
     options,
   };
-};
+}
 
-const getUnlistedScriptEntrypoint = async (
+async function getUnlistedScriptEntrypoint(
   { inputPath, name }: EntrypointInfo,
   options: Record<string, any>,
-): Promise<UnlistedScriptEntrypoint> => {
+): Promise<UnlistedScriptEntrypoint> {
   return {
     type: 'unlisted-script',
     name,
@@ -315,12 +315,12 @@ const getUnlistedScriptEntrypoint = async (
     outputDir: wxt.config.outDir,
     options: resolvePerBrowserOptions(options, wxt.config.browser),
   };
-};
+}
 
-const getBackgroundEntrypoint = async (
+async function getBackgroundEntrypoint(
   { inputPath, name }: EntrypointInfo,
   options: Record<string, any>,
-): Promise<BackgroundEntrypoint> => {
+): Promise<BackgroundEntrypoint> {
   const strictOptions: BackgroundEntrypoint['options'] =
     resolvePerBrowserOptions(options, wxt.config.browser);
 
@@ -335,12 +335,12 @@ const getBackgroundEntrypoint = async (
     outputDir: wxt.config.outDir,
     options: strictOptions,
   };
-};
+}
 
-const getContentScriptEntrypoint = async (
+async function getContentScriptEntrypoint(
   { inputPath, name }: EntrypointInfo,
   options: Record<string, any>,
-): Promise<ContentScriptEntrypoint> => {
+): Promise<ContentScriptEntrypoint> {
   return {
     type: 'content-script',
     name,
@@ -353,12 +353,12 @@ const getContentScriptEntrypoint = async (
       wxt.config.browser,
     ),
   };
-};
+}
 
-const getSidepanelEntrypoint = async (
+async function getSidepanelEntrypoint(
   info: EntrypointInfo,
   options: Record<string, any>,
-): Promise<SidepanelEntrypoint> => {
+): Promise<SidepanelEntrypoint> {
   // Extract non-per-browser options and rename title to defaultTitle
   const { title, ...perBrowserOptions } = options;
 
@@ -375,9 +375,9 @@ const getSidepanelEntrypoint = async (
     inputPath: info.inputPath,
     outputDir: wxt.config.outDir,
   };
-};
+}
 
-const isEntrypointSkipped = (entry: Omit<Entrypoint, 'skipped'>): boolean => {
+function isEntrypointSkipped(entry: Omit<Entrypoint, 'skipped'>): boolean {
   if (wxt.config.filterEntrypoints != null) {
     return !wxt.config.filterEntrypoints.has(entry.name);
   }
@@ -398,6 +398,6 @@ const isEntrypointSkipped = (entry: Omit<Entrypoint, 'skipped'>): boolean => {
   }
 
   return false;
-};
+}
 
 const CONTENT_SCRIPT_OUT_DIR = 'content-scripts';

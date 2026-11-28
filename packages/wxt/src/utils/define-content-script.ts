@@ -1,8 +1,8 @@
 /** @module wxt/utils/define-content-script */
 import type { ContentScriptDefinition } from '../types';
 
-export const defineContentScript = (
+export function defineContentScript(
   definition: ContentScriptDefinition,
-): ContentScriptDefinition => {
+): ContentScriptDefinition {
   return definition;
-};
+}

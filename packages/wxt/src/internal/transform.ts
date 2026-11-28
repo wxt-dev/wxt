@@ -1,5 +1,4 @@
-import type { ProxifiedModule } from 'magicast';
-import { parseModule } from 'magicast';
+import { ProxifiedModule, parseModule } from 'magicast';
 
 /**
  * Removes any code used at runtime related to an entrypoint's main function.
@@ -11,12 +10,10 @@ import { parseModule } from 'magicast';
  * 4. Removes value-less, side-effect only imports (like `import "./styles.css"` or
  *    `import "polyfill"`)
  */
-export const removeMainFunctionCode = (
-  code: string,
-): {
+export function removeMainFunctionCode(code: string): {
   code: string;
   map?: string;
-} => {
+} {
   const mod = parseModule(code);
   emptyMainFunction(mod);
   let removedCount = 0;
@@ -30,9 +27,9 @@ export const removeMainFunctionCode = (
   } while (removedCount > 0 && depth++ <= maxDepth);
   removeSideEffectImports(mod);
   return mod.generate();
-};
+}
 
-const emptyMainFunction = (mod: ProxifiedModule): void => {
+function emptyMainFunction(mod: ProxifiedModule): void {
   if (mod.exports?.default?.$type === 'function-call') {
     if (mod.exports.default.$ast?.arguments?.[0]?.body) {
       // Remove body from function
@@ -48,9 +45,9 @@ const emptyMainFunction = (mod: ProxifiedModule): void => {
         );
     }
   }
-};
+}
 
-const removeUnusedTopLevelVariables = (mod: ProxifiedModule): number => {
+function removeUnusedTopLevelVariables(mod: ProxifiedModule): number {
   const simpleAst = getSimpleAstJson(mod.$ast);
   const usedMap = findUsedIdentifiers(simpleAst);
 
@@ -134,9 +131,9 @@ const removeUnusedTopLevelVariables = (mod: ProxifiedModule): number => {
   }
 
   return deletedCount;
-};
+}
 
-const removeUnusedTopLevelFunctions = (mod: ProxifiedModule): number => {
+function removeUnusedTopLevelFunctions(mod: ProxifiedModule): number {
   const simpleAst = getSimpleAstJson(mod.$ast);
   const usedMap = findUsedIdentifiers(simpleAst);
 
@@ -152,9 +149,9 @@ const removeUnusedTopLevelFunctions = (mod: ProxifiedModule): number => {
     }
   }
   return deletedCount;
-};
+}
 
-const removeUnusedImports = (mod: ProxifiedModule): number => {
+function removeUnusedImports(mod: ProxifiedModule): number {
   const simpleAst = getSimpleAstJson(mod.$ast);
   const usedMap = findUsedIdentifiers(simpleAst);
   const importSymbols = Object.keys(mod.imports);
@@ -167,11 +164,11 @@ const removeUnusedImports = (mod: ProxifiedModule): number => {
     deletedCount++;
   });
   return deletedCount;
-};
+}
 
 // TODO: Do a more complex declaration analysis where shadowed variables are detected and ignored.
 // Right now, this code assumes there are no shadowed variables.
-const findUsedIdentifiers = (simpleAst: any) => {
+function findUsedIdentifiers(simpleAst: any) {
   const usedMap = new Map<string, boolean>();
   const queue: any[] = [simpleAst];
   for (const item of queue) {
@@ -200,12 +197,12 @@ const findUsedIdentifiers = (simpleAst: any) => {
     }
   }
   return usedMap;
-};
+}
 
-const deleteImportAst = (
+function deleteImportAst(
   mod: ProxifiedModule,
   shouldDelete: (node: any) => boolean,
-): void => {
+): void {
   const importIndexesToDelete: number[] = [];
   (mod.$ast as any).body.forEach((node: any, index: number) => {
     if (node.type === 'ImportDeclaration' && shouldDelete(node)) {
@@ -215,17 +212,17 @@ const deleteImportAst = (
   importIndexesToDelete.reverse().forEach((i) => {
     delete (mod.$ast as any).body[i];
   });
-};
+}
 
-const removeSideEffectImports = (mod: ProxifiedModule): void => {
+function removeSideEffectImports(mod: ProxifiedModule): void {
   deleteImportAst(mod, (node) => node.specifiers.length === 0);
-};
+}
 
 /**
  * Util to get the AST as a simple JSON object, stripping out large objects and
  * file locations to keep it readable.
  */
-const getSimpleAstJson = (ast: any): any => {
+function getSimpleAstJson(ast: any): any {
   if (!ast) {
     return ast;
   } else if (Array.isArray(ast)) {
@@ -239,4 +236,4 @@ const getSimpleAstJson = (ast: any): any => {
   } else {
     return ast;
   }
-};
+}

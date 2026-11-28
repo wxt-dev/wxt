@@ -1,4 +1,3 @@
-import type { PackageManager, PackageManagerName } from 'nypm';
 import {
   detectPackageManager,
   addDependency,
@@ -6,19 +5,21 @@ import {
   ensureDependencyInstalled,
   installDependencies,
   removeDependency,
+  PackageManager,
+  PackageManagerName,
 } from 'nypm';
 
-import type { WxtPackageManager } from '../../types';
+import { WxtPackageManager } from '../../types';
 import { bun } from './bun';
 import { deno } from './deno';
 import { npm } from './npm';
 import { pnpm } from './pnpm';
-import type { WxtPackageManagerImpl } from './types';
+import { WxtPackageManagerImpl } from './types';
 import { yarn } from './yarn';
 
-export const createWxtPackageManager = async (
+export async function createWxtPackageManager(
   root: string,
-): Promise<WxtPackageManager> => {
+): Promise<WxtPackageManager> {
   const pm = await detectPackageManager(root, {
     includeParentDirs: true,
   });
@@ -67,7 +68,7 @@ export const createWxtPackageManager = async (
       );
     },
   };
-};
+}
 
 const packageManagers: Record<PackageManagerName, WxtPackageManagerImpl> = {
   npm,

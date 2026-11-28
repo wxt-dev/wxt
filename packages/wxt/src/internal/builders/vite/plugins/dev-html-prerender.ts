@@ -7,7 +7,7 @@ import type * as vite from 'vite';
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { virtualModules } from '../../../../internal-utils/virtual-modules';
-import type { ResolvedConfig, WxtDevServer } from '../../../../types';
+import { ResolvedConfig, WxtDevServer } from '../../../../types';
 
 // Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.
 const inlineScriptContents: Record<string, string> = {};
@@ -16,10 +16,10 @@ const inlineScriptContents: Record<string, string> = {};
  * Pre-renders the HTML entrypoints when building the extension to connect to
  * the dev server.
  */
-export const devHtmlPrerender = (
+export function devHtmlPrerender(
   config: ResolvedConfig,
   server: WxtDevServer | undefined,
-): vite.PluginOption => {
+): vite.PluginOption {
   const htmlReloadId = '@wxt/reload-html';
   const resolvedHtmlReloadId = '\0virtual:wxt-reload-html';
 
@@ -168,16 +168,16 @@ export const devHtmlPrerender = (
       },
     },
   ];
-};
+}
 
-export const pointToDevServer = (
+export function pointToDevServer(
   config: ResolvedConfig,
   server: WxtDevServer,
   id: string,
   document: Document,
   querySelector: string,
   attr: string,
-) => {
+) {
   document.querySelectorAll(querySelector).forEach((element) => {
     if (
       element.hasAttribute('vite-ignore') ||
@@ -226,13 +226,13 @@ export const pointToDevServer = (
       }
     }
   });
-};
+}
 
-const isUrl = (str: string): boolean => {
+function isUrl(str: string): boolean {
   try {
     new URL(str);
     return true;
   } catch {
     return false;
   }
-};
+}

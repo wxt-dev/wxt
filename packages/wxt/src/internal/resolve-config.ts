@@ -14,8 +14,8 @@ import { pathExists } from '../internal-utils/fs-utils';
 import { createWxtLogger } from '../internal-utils/log/wxt-logger';
 import { safeStringToNumber } from '../internal-utils/number-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import type { NullishRequired } from '../internal-utils/type-utils';
-import type {
+import { NullishRequired } from '../internal-utils/type-utils';
+import {
   ConfigEnv,
   InlineConfig,
   Logger,
@@ -41,10 +41,10 @@ import { builtinModules } from './builtin-modules';
  * inline config if set. If unset, undefined is passed in, letting this function
  * decide default values.
  */
-export const resolveConfig = async (
+export async function resolveConfig(
   inlineConfig: InlineConfig,
   command: WxtCommand,
-): Promise<ResolvedConfig> => {
+): Promise<ResolvedConfig> {
   // Load user config
 
   let userConfig: UserConfig = {};
@@ -236,25 +236,25 @@ export const resolveConfig = async (
     plugins: [],
     ...moduleOptions,
   };
-};
+}
 
-const resolveManifestConfig = async (
+async function resolveManifestConfig(
   env: ConfigEnv,
   manifest: UserManifest | Promise<UserManifest> | UserManifestFn | undefined,
-): Promise<UserManifest> => {
+): Promise<UserManifest> {
   return typeof manifest === 'function'
     ? await manifest(env)
     : await (manifest ?? {});
-};
+}
 
 /**
  * Merge the inline config and user config. Inline config is given priority.
  * Defaults are not applied here.
  */
-const mergeInlineConfig = async (
+async function mergeInlineConfig(
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
-): Promise<InlineConfig> => {
+): Promise<InlineConfig> {
   // Merge imports option
   const imports: InlineConfig['imports'] =
     inlineConfig.imports === false || userConfig.imports === false
@@ -286,14 +286,14 @@ const mergeInlineConfig = async (
     manifest,
     ...builderConfig,
   };
-};
+}
 
-const resolveZipConfig = (
+function resolveZipConfig(
   root: string,
   browser: string,
   outBaseDir: string,
   mergedConfig: InlineConfig,
-): NullishRequired<ResolvedConfig['zip']> => {
+): NullishRequired<ResolvedConfig['zip']> {
   const downloadedPackagesDir = path.resolve(root, '.wxt/local_modules');
   return {
     name: undefined,
@@ -323,12 +323,12 @@ const resolveZipConfig = (
     downloadPackages: mergedConfig.zip?.downloadPackages ?? [],
     downloadedPackagesDir,
   };
-};
+}
 
-const resolveAnalysisConfig = (
+function resolveAnalysisConfig(
   root: string,
   mergedConfig: InlineConfig,
-): NullishRequired<ResolvedConfig['analysis']> => {
+): NullishRequired<ResolvedConfig['analysis']> {
   const analysisOutputFile = path.resolve(
     root,
     mergedConfig.analysis?.outputFile ?? 'stats.html',
@@ -345,14 +345,14 @@ const resolveAnalysisConfig = (
     outputName: analysisOutputName,
     keepArtifacts: mergedConfig.analysis?.keepArtifacts ?? false,
   };
-};
+}
 
-const getUnimportOptions = async (
+async function getUnimportOptions(
   wxtDir: string,
   srcDir: string,
   logger: WxtLogger,
   config: InlineConfig,
-): Promise<WxtResolvedUnimportOptions> => {
+): Promise<WxtResolvedUnimportOptions> {
   const disabled = config.imports === false;
   const eslintrc = await getUnimportEslintOptions(
     logger,
@@ -497,13 +497,13 @@ const getUnimportOptions = async (
     config.imports ?? {},
     defaultOptions,
   );
-};
+}
 
-const getUnimportEslintOptions = async (
+async function getUnimportEslintOptions(
   logger: WxtLogger,
   wxtDir: string,
   options: InlineConfig['imports'],
-): Promise<ResolvedEslintrc> => {
+): Promise<ResolvedEslintrc> {
   const inlineEnabled =
     options === false ? false : (options?.eslintrc?.enabled ?? true);
 
@@ -537,26 +537,26 @@ const getUnimportEslintOptions = async (
     ),
     globalsPropValue: true,
   };
-};
+}
 
 /** Returns the path to `node_modules/wxt`. */
-const resolveWxtModuleDir = () => {
+function resolveWxtModuleDir() {
   const url = import.meta.resolve('wxt');
 
   // import.meta.resolve returns the package entry (e.g. dist/index.mjs), not the
   // package root directory, which we want to return from this function.
   return path.resolve(fileURLToPath(url), '../..');
-};
+}
 
-const isDirMissing = async (dir: string) => {
+async function isDirMissing(dir: string) {
   return !(await pathExists(dir));
-};
+}
 
-const logMissingDir = (logger: WxtLogger, name: string, expected: string) => {
+function logMissingDir(logger: WxtLogger, name: string, expected: string) {
   logger.warnOnce(
     `${name} directory not found: ./${normalizePath(path.relative(process.cwd(), expected))}`,
   );
-};
+}
 
 /** Map of `ConfigEnv` commands to their default modes. */
 const COMMAND_MODES: Record<WxtCommand, string> = {
@@ -564,11 +564,11 @@ const COMMAND_MODES: Record<WxtCommand, string> = {
   serve: 'development',
 };
 
-export const mergeBuilderConfig = async (
+export async function mergeBuilderConfig(
   logger: Logger,
   inlineConfig: InlineConfig,
   userConfig: UserConfig,
-): Promise<Pick<InlineConfig, 'vite'>> => {
+): Promise<Pick<InlineConfig, 'vite'>> {
   const vite = await import('vite').catch((err) => {
     logger.debug('Failed to import vite:', err);
   });
@@ -583,13 +583,13 @@ export const mergeBuilderConfig = async (
   }
 
   throw Error('Builder not found. Make sure vite is installed.');
-};
+}
 
-export const resolveWxtUserModules = async (
+export async function resolveWxtUserModules(
   root: string,
   modulesDir: string,
   modules: string[] = [],
-): Promise<WxtModuleWithMetadata<any>[]> => {
+): Promise<WxtModuleWithMetadata<any>[]> {
   // Resolve node_modules modules
   const npmModules = await Promise.all<WxtModuleWithMetadata<any>>(
     modules.map(async (moduleId) => {
@@ -641,4 +641,4 @@ export const resolveWxtUserModules = async (
     }),
   );
   return [...npmModules, ...localModules];
-};
+}

@@ -3,16 +3,12 @@ import type * as vite from 'vite';
 
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
-import type {
-  Entrypoint,
-  ResolvedConfig,
-  WxtPluginEntry,
-} from '../../../../types';
+import { Entrypoint, ResolvedConfig, WxtPluginEntry } from '../../../../types';
 
-export const getPluginModules = (
+export function getPluginModules(
   plugins: Array<string | WxtPluginEntry>,
   entrypoint: Entrypoint | undefined,
-): string[] => {
+): string[] {
   return plugins
     .map((plugin): WxtPluginEntry =>
       typeof plugin === 'string' ? { module: plugin } : plugin,
@@ -21,7 +17,7 @@ export const getPluginModules = (
       (plugin) => entrypoint == null || (plugin.apply?.(entrypoint) ?? true),
     )
     .map((plugin) => plugin.module);
-};
+}
 
 /**
  * Resolve and load plugins for each entrypoint. This handles both JS
@@ -33,16 +29,16 @@ export const getPluginModules = (
  *   Injected by the caller instead of read from a global, so this plugin
  *   doesn't depend on global `wxt` state.
  */
-export const wxtPluginLoader = (
+export function wxtPluginLoader(
   config: ResolvedConfig,
   getEntrypoints: () => Entrypoint[],
-): vite.Plugin => {
+): vite.Plugin {
   const virtualModuleId = 'virtual:wxt-plugins';
   const resolvedVirtualModuleId = '\0' + virtualModuleId;
   const virtualHtmlModuleId = 'virtual:wxt-html-plugins';
   const resolvedVirtualHtmlModuleId = '\0' + virtualHtmlModuleId;
 
-  const getEntrypointFromId = (id: string): Entrypoint | undefined => {
+  function getEntrypointFromId(id: string): Entrypoint | undefined {
     const queryIndex = id.indexOf('?');
     if (queryIndex === -1) return undefined;
     const entrypointNameFromQueryParam = new URLSearchParams(
@@ -52,7 +48,7 @@ export const wxtPluginLoader = (
     return getEntrypoints().find(
       (entry) => entry.name === entrypointNameFromQueryParam,
     );
-  };
+  }
 
   return {
     name: 'wxt:plugin-loader',
@@ -147,4 +143,4 @@ export const wxtPluginLoader = (
       },
     },
   };
-};
+}

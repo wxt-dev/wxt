@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { BackgroundDefinition } from '../../types';
+import { BackgroundDefinition } from '../../types';
 import { defineBackground } from '../define-background';
 
 describe('defineBackground', () => {
