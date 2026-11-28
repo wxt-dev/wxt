@@ -10,7 +10,8 @@ import { registerWxt } from '../internal/wxt';
 
 /**
  * Wrap an action handler to add a timer, error handling, and maybe enable debug
- * mode.
+ * mode. Completed commands exit explicitly so handles created while loading
+ * user entrypoints cannot keep the CLI alive.
  */
 export function wrapAction(
   cb: (
@@ -39,10 +40,13 @@ export function wrapAction(
 
       const status = await cb(...args);
 
-      if (!status?.isOngoing && !options?.disableFinishedLog)
-        consola.success(
-          `Finished in ${formatDuration(Date.now() - startTime)}`,
-        );
+      if (!status?.isOngoing) {
+        if (!options?.disableFinishedLog)
+          consola.success(
+            `Finished in ${formatDuration(Date.now() - startTime)}`,
+          );
+        process.exit(0);
+      }
     } catch (err) {
       consola.fail(
         `Command failed after ${formatDuration(Date.now() - startTime)}`,
