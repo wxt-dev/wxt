@@ -3,4 +3,4 @@ command = "bun run docs:build"
 publish = "docs/.vitepress/dist"
 
 [build.environment]
-BUN_VERSION = "1.4.4"
+BUN_VERSION = "1.4.5"
