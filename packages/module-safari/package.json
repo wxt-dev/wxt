@@ -1,0 +1,29 @@
+{
+  "name": "@wxt-dev/module-safari",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Internal WXT module to convert Safari extensions to Xcode projects",
+  "license": "MIT",
+  "type": "module",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "buildc -- tsdown",
+    "check": "bun run build && check",
+    "test": "buildc --deps-only -- vitest"
+  },
+  "devDependencies": {
+    "@aklinker1/buildc": "catalog:",
+    "@types/node": "catalog:",
+    "oxlint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -229,6 +229,7 @@ export async function resolveConfig(
       server: devServerConfig,
       reloadCommand,
     },
+    safari: mergedConfig.safari,
     hooks: mergedConfig.hooks ?? {},
     vite: mergedConfig.vite ?? (() => ({})),
     builtinModules,

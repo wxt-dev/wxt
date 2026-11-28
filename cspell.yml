@@ -76,6 +76,7 @@ words:
   - hostable
   - ialddiekpanaiffomfkfchejlohnhhce
   - iconify
+  - infoplist
   - jsons
   - Kenobi
   - keystyle
@@ -84,6 +85,7 @@ words:
   - linkedom
   - llms
   - locationchange
+  - lproj
   - magicast
   - Menlo
   - menupanel
@@ -105,7 +107,9 @@ words:
   - ohash
   - oklab
   - oxlint
+  - pbxproj
   - personaltoolbar
+  - plutil
   - polyfilling
   - portaling
   - posthog
@@ -146,5 +150,7 @@ words:
   - webext
   - webextension
   - webextrc
+  - xcodeproj
+  - xcproj
   - xcrun
   - xlink

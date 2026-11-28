@@ -10,6 +10,21 @@ import type * as vite from 'vite';
 import { ManifestContentScript } from './internal-utils/type-utils';
 import type { ContentScriptContext } from './utils/content-script-context';
 
+export type SafariProjectType = 'macos' | 'ios' | 'both';
+
+export interface SafariOptions {
+  /** App category, e.g. 'public.app-category.productivity'. */
+  appCategory: string;
+  /** Bundle identifier, e.g. 'com.example.your-extension'. */
+  bundleIdentifier: string;
+  /** Apple Developer Team ID. */
+  developmentTeam?: string;
+  /** Target Apple platforms. Defaults to 'both' (macOS and iOS). */
+  projectType?: SafariProjectType;
+  /** Open the Xcode project after creation. Defaults to false. */
+  openProject?: boolean;
+}
+
 export interface InlineConfig {
   /**
    * Your project's root directory containing the `package.json` used to fill
@@ -482,6 +497,11 @@ export interface InlineConfig {
      */
     reloadCommand?: string | false;
   };
+  /**
+   * Options for converting Safari builds (`wxt build -b safari`) into an Xcode
+   * project via the built-in `@wxt-dev/module-safari` module.
+   */
+  safari?: SafariOptions;
   /** Project hooks for running logic during the build process. */
   hooks?: NestedHooks<WxtHooks>;
   /**
@@ -1679,6 +1699,7 @@ export interface ResolvedConfig {
     };
     reloadCommand: string | false;
   };
+  safari?: SafariOptions;
   hooks: NestedHooks<WxtHooks>;
   builtinModules: WxtModule<any>[];
   userModules: WxtModuleWithMetadata<any>[];

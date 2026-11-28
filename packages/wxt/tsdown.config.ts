@@ -20,6 +20,7 @@ import {
 // `dist/` dir mirrors the `src/` dir, making it easy to explore and patch.
 
 const inlineDeps = [
+  '@wxt-dev/module-safari',
   'dotenv-expand',
   'is-wsl',
   'get-port-please',

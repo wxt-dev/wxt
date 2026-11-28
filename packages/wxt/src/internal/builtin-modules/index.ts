@@ -1,3 +1,5 @@
+import safari from '@wxt-dev/module-safari';
+
 import { WxtModule } from '../../types';
 import escapeUnicode from './escape-unicode';
 import faviconPermission from './favicon-permission';
@@ -9,4 +11,5 @@ export const builtinModules: WxtModule<any>[] = [
   faviconPermission,
   escapeUnicode,
   plugins,
+  safari as unknown as WxtModule<any>,
 ];
