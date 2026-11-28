@@ -7,7 +7,7 @@ import type * as vite from 'vite';
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
 import { virtualModules } from '../../../../internal-utils/virtual-modules';
-import { ResolvedConfig, WxtDevServer } from '../../../../types';
+import type { ResolvedConfig, WxtDevServer } from '../../../../types';
 
 // Stored outside the plugin to effect all instances of the devHtmlPrerender plugin.
 const inlineScriptContents: Record<string, string> = {};

@@ -3,7 +3,8 @@ import { join } from 'node:path';
 
 import { Feed } from 'feed';
 import footnote from 'markdown-it-footnote';
-import { DefaultTheme, defineConfig } from 'vitepress';
+import { defineConfig } from 'vitepress';
+import type { DefaultTheme } from 'vitepress';
 import addKnowledge from 'vitepress-knowledge';
 import {
   groupIconMdPlugin,

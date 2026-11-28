@@ -1,4 +1,4 @@
-import { Entrypoint, EntrypointGroup } from '../types';
+import type { Entrypoint, EntrypointGroup } from '../types';
 
 /**
  * Entrypoints are built in groups. HTML pages can all be built together in a

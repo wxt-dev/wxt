@@ -1,6 +1,6 @@
 import type { Browser } from '@wxt-dev/browser';
 
-import { BuildOutput, Entrypoint, EntrypointGroup } from '../types';
+import type { BuildOutput, Entrypoint, EntrypointGroup } from '../types';
 import { buildEntrypoints } from './build-entrypoints';
 import { generateWxtDir } from './generate-wxt-dir';
 import { generateManifest, writeManifest } from './manifest';

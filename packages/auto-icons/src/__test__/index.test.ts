@@ -1,11 +1,14 @@
 import { access, mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import sharp, { type Sharp } from 'sharp';
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import type { Wxt, UserManifest } from 'wxt';
+import type { Sharp } from 'sharp';
+import sharp from 'sharp';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Mock } from 'vitest';
+import type { UserManifest, Wxt } from 'wxt';
 
-import autoIconsModule, { type AutoIconsOptions } from '../index';
+import type { AutoIconsOptions } from '../index';
+import autoIconsModule from '../index';
 
 vi.mock('node:fs/promises', () => ({
   access: vi.fn(),

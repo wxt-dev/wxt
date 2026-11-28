@@ -1,6 +1,7 @@
-import { type ContentData, createContentLoader } from 'vitepress';
+import type { ContentData } from 'vitepress';
+import { createContentLoader } from 'vitepress';
 
-import { PostFrontmatter } from '../utils/types';
+import type { PostFrontmatter } from '../utils/types';
 
 declare const data: Array<ContentData & { frontmatter: PostFrontmatter }>;
 export { data };

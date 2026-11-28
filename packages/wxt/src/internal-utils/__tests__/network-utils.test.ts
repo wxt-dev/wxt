@@ -3,7 +3,7 @@ import * as dns from 'node:dns';
 import consola from 'consola';
 import { describe, expect, it, vi } from 'vitest';
 
-import { ResolvedConfig } from '../../types';
+import type { ResolvedConfig } from '../../types';
 import { isOnline, fetchCached } from '../network-utils';
 
 type DnsCallback = (err: NodeJS.ErrnoException | null) => void;

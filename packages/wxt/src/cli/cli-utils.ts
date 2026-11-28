@@ -1,5 +1,6 @@
-import { CAC, Command } from 'cac';
-import consola, { LogLevels, LogType } from 'consola';
+import type { CAC, Command } from 'cac';
+import type { LogType } from 'consola';
+import consola, { LogLevels } from 'consola';
 import { x as spawn } from 'tinyexec';
 
 import { filterTruthy, toArray } from '../internal-utils/array-utils';

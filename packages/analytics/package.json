@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
+    "oxlint": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",

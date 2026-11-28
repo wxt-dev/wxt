@@ -29,6 +29,7 @@
   "devDependencies": {
     "@types/chrome": "0.3.9",
     "@types/node": "catalog:",
+    "oxlint": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

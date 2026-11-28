@@ -3,8 +3,10 @@ import type { ChildProcess } from 'node:child_process';
 import { describe, it, expect, vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 
-import { createBidiConnection, type BidiConnection } from '../bidi';
-import { createCdpConnection, type CDPConnection } from '../cdp';
+import { createBidiConnection } from '../bidi';
+import type { BidiConnection } from '../bidi';
+import { createCdpConnection } from '../cdp';
+import type { CDPConnection } from '../cdp';
 import { installChromium, installFirefox } from '../install';
 
 vi.mock('../cdp');

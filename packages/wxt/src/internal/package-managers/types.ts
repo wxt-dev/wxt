@@ -1,4 +1,4 @@
-import { WxtPackageManager } from '../../types';
+import type { WxtPackageManager } from '../../types';
 
 export type WxtPackageManagerImpl = Pick<
   WxtPackageManager,

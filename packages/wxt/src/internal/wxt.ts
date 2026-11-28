@@ -2,7 +2,13 @@ import { relative } from 'path';
 
 import { createHooks } from 'hookable';
 
-import { InlineConfig, Wxt, WxtCommand, WxtHooks, WxtModule } from '../types';
+import type {
+  InlineConfig,
+  Wxt,
+  WxtCommand,
+  WxtHooks,
+  WxtModule,
+} from '../types';
 import { builtinModules } from './builtin-modules';
 import { detectBuilder } from './detect-builder';
 import { detectRunner } from './detect-runner';

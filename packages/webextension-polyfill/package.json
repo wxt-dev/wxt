@@ -45,6 +45,7 @@
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
     "@types/webextension-polyfill": "^0.12.5",
+    "oxlint": "catalog:",
     "publint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",

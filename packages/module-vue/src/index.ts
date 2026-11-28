@@ -1,5 +1,6 @@
 import 'wxt';
-import vue, { Options as ViteOptions } from '@vitejs/plugin-vue';
+import type { Options as ViteOptions } from '@vitejs/plugin-vue';
+import vue from '@vitejs/plugin-vue';
 import { addImportPreset, addViteConfig, defineWxtModule } from 'wxt/modules';
 
 export default defineWxtModule<VueModuleOptions>({
@@ -9,7 +10,7 @@ export default defineWxtModule<VueModuleOptions>({
     const { vite } = options ?? {};
 
     // Add plugin & set sourcemap option
-    addViteConfig(wxt, ({ command }) => ({
+    addViteConfig(wxt, () => ({
       // @ts-ignore: Ignore vite version issues
       plugins: [vue(vite)],
       build: {

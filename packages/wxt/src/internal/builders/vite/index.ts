@@ -1,7 +1,7 @@
 import { mkdir, readdir, rename, rmdir, stat } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 
-import { Hookable } from 'hookable';
+import type { Hookable } from 'hookable';
 import type * as vite from 'vite';
 
 import { toArray } from '../../../internal-utils/array-utils';
@@ -11,7 +11,7 @@ import {
 } from '../../../internal-utils/entrypoint-utils';
 import { normalizePath } from '../../../internal-utils/path-utils';
 import { safeVarName } from '../../../internal-utils/string-utils';
-import {
+import type {
   BuildStepOutput,
   Entrypoint,
   EntrypointGroup,
@@ -23,7 +23,10 @@ import {
   WxtHooks,
 } from '../../../types';
 import { createExtensionEnvironment } from '../../environments';
-import { VirtualEntrypointType, VirtualModuleId } from '../../virtual-modules';
+import type {
+  VirtualEntrypointType,
+  VirtualModuleId,
+} from '../../virtual-modules';
 import * as wxtPlugins from './plugins';
 
 interface RollupAssetNameInfo {

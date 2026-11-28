@@ -6,7 +6,8 @@
  *
  * @module @wxt-dev/storage
  */
-import { browser, type Browser } from '@wxt-dev/browser';
+import { browser } from '@wxt-dev/browser';
+import type { Browser } from '@wxt-dev/browser';
 import { dequal } from 'dequal/lite';
 import { withLock } from 'superlock';
 

@@ -4,7 +4,7 @@ import { styleText } from 'node:util';
 
 import { wxt } from '../../internal/wxt';
 import { getBytesDisplay } from '../fs-utils';
-import { TextStyle } from '../type-utils';
+import type { TextStyle } from '../type-utils';
 import { printTable } from './print-table';
 
 export async function printFileList(

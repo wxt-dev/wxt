@@ -1,6 +1,7 @@
 import { extname } from 'node:path';
 
-import { createUnimport, toExports, type Unimport } from 'unimport';
+import { createUnimport, toExports } from 'unimport';
+import type { Unimport } from 'unimport';
 import UnimportPlugin from 'unimport/unplugin';
 
 import { addViteConfig, defineWxtModule } from '../../modules';

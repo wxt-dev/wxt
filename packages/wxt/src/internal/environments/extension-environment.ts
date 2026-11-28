@@ -1,7 +1,8 @@
 import { fakeBrowser } from '@webext-core/fake-browser';
 
 import { getBrowserEnvironmentGlobals } from './browser-environment';
-import { createEnvironment, Environment } from './environment';
+import type { Environment } from './environment';
+import { createEnvironment } from './environment';
 
 export function createExtensionEnvironment(): Environment {
   return createEnvironment(getExtensionEnvironmentGlobals);

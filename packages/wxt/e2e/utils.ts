@@ -5,18 +5,12 @@ import { dirname, relative, resolve } from 'path';
 import { glob } from 'tinyglobby';
 import * as vite from 'vite';
 
-import {
-  InlineConfig,
-  UserConfig,
-  WxtCommand,
-  build,
-  createServer,
-  prepare,
-  zip,
-} from '../src';
+import type { InlineConfig, UserConfig, WxtCommand } from '../src';
+import { build, createServer, prepare, zip } from '../src';
 import { pathExists, readJson } from '../src/internal-utils/fs-utils';
 import { normalizePath } from '../src/internal-utils/path-utils';
-import { exec, ExecResult } from '../src/internal-utils/testing/exec';
+import type { ExecResult } from '../src/internal-utils/testing/exec';
+import { exec } from '../src/internal-utils/testing/exec';
 import { registerWxt } from '../src/internal/wxt';
 
 // Run "bun wxt" to use the "wxt" dev script, not the "wxt" binary from the

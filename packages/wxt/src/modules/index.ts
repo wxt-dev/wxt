@@ -19,7 +19,7 @@ import type {
 } from '../types';
 
 // Re-export to prevent TS2742 type errors
-export { WxtModule };
+export type { WxtModule };
 
 export function defineWxtModule<TOptions extends WxtModuleOptions>(
   module: WxtModule<TOptions> | WxtModuleSetup<TOptions>,

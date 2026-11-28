@@ -1,6 +1,6 @@
 import type * as vite from 'vite';
 
-import { EntrypointGroup } from '../../../../types';
+import type { EntrypointGroup } from '../../../../types';
 import { getEntrypointRuntimeEnvEntries } from '../../../runtime-env-entries';
 
 /** Define a set of global variables specific to an entrypoint. */

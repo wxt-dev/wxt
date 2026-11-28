@@ -3,7 +3,7 @@ import { styleText } from 'node:util';
 import { dirname, resolve } from 'path';
 
 import { toArray } from '../internal-utils/array-utils';
-import {
+import type {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,

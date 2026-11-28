@@ -1,7 +1,8 @@
 /// <reference types="chrome" />
 import { describe, expectTypeOf, it } from 'vitest';
 
-import { browser, type Browser } from '../index';
+import { browser } from '../index';
+import type { Browser } from '../index';
 
 describe('browser', () => {
   describe('types', () => {

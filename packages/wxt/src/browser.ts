@@ -12,7 +12,8 @@
  *
  * @module wxt/browser
  */
-import { browser as _browser, type Browser } from '@wxt-dev/browser';
+import { browser as _browser } from '@wxt-dev/browser';
+import type { Browser } from '@wxt-dev/browser';
 
 import type { ScriptPublicPath } from './utils/inject-script';
 
@@ -67,4 +68,4 @@ export type WxtBrowser = Omit<
 
 export const browser: WxtBrowser = _browser;
 
-export { Browser };
+export type { Browser };

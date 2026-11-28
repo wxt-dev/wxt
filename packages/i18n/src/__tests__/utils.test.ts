@@ -1,9 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { ChromeMessage } from '../build';
+import type { ChromeMessage } from '../build';
 import {
-  applyNamedSubstitutions,
   applyChromeMessagePlaceholders,
+  applyNamedSubstitutions,
   getNamedSubstitutionNames,
   getSubstitutionCount,
   standardizeLocale,

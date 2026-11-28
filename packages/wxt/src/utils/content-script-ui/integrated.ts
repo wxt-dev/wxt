@@ -1,5 +1,5 @@
 /** @module wxt/utils/content-script-ui/integrated */
-import { ContentScriptContext } from '../content-script-context';
+import type { ContentScriptContext } from '../content-script-context';
 import { applyPosition, createMountFunctions, mountUi } from './shared';
 import type { ContentScriptUi, ContentScriptUiOptions } from './types';
 

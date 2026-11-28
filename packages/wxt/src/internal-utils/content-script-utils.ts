@@ -1,8 +1,8 @@
 import type { Browser } from '@wxt-dev/browser';
 
-import { ContentScriptEntrypoint, ResolvedConfig } from '../types';
+import type { ContentScriptEntrypoint, ResolvedConfig } from '../types';
 import { getEntrypointBundlePath } from './entrypoint-utils';
-import { ManifestContentScript } from './type-utils';
+import type { ManifestContentScript } from './type-utils';
 
 /**
  * Returns a unique and consistent string hash based on a content scripts

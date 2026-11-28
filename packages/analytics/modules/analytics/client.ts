@@ -1,4 +1,5 @@
-import { browser, type Browser } from '@wxt-dev/browser';
+import { browser } from '@wxt-dev/browser';
+import type { Browser } from '@wxt-dev/browser';
 import { isBackground } from '@wxt-dev/is-background';
 import Bowser from 'bowser';
 

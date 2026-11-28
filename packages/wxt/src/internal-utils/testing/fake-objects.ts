@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 
 import { setWxtForTesting } from '../../internal/wxt';
-import {
+import type {
   FsCache,
   ResolvedConfig,
   WxtDevServer,

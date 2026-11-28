@@ -3,7 +3,11 @@ import type * as vite from 'vite';
 
 import { getEntrypointName } from '../../../../internal-utils/entrypoint-utils';
 import { normalizePath } from '../../../../internal-utils/path-utils';
-import { Entrypoint, ResolvedConfig, WxtPluginEntry } from '../../../../types';
+import type {
+  Entrypoint,
+  ResolvedConfig,
+  WxtPluginEntry,
+} from '../../../../types';
 
 export function getPluginModules(
   plugins: Array<string | WxtPluginEntry>,

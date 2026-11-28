@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import type * as vite from 'vite';
 
 import { normalizePath } from '../../../../internal-utils/path-utils';
-import { ResolvedConfig } from '../../../../types';
+import type { ResolvedConfig } from '../../../../types';
 import { removeMainFunctionCode } from '../../../transform';
 
 /**

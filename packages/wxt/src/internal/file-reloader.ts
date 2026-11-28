@@ -13,7 +13,7 @@ import {
   isHtmlEntrypoint,
 } from '../internal-utils/entrypoint-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import {
+import type {
   BuildOutput,
   BuildStepOutput,
   EntrypointGroup,

@@ -1,6 +1,6 @@
 import type * as vite from 'vite';
 
-import { ResolvedConfig } from '../../../../types';
+import type { ResolvedConfig } from '../../../../types';
 import { getRuntimeEnvEntries } from '../../../runtime-env-entries';
 
 export function addRuntimeEnvEntries(

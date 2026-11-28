@@ -11,7 +11,7 @@ import {
   isJsEntrypoint,
   resolvePerBrowserOptions,
 } from '../internal-utils/entrypoint-utils';
-import {
+import type {
   BackgroundEntrypoint,
   ContentScriptEntrypoint,
   Entrypoint,

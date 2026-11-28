@@ -25,6 +25,7 @@
     "markdown-it-footnote": "^4.0.0",
     "nano-staged": "^1.0.2",
     "oxfmt": "^0.78.0",
+    "oxlint": "catalog:",
     "p-map": "^7.0.4",
     "puppeteer-core": "^25.17.0",
     "rumdl": "^0.3.4",

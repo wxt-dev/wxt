@@ -1,4 +1,4 @@
-import { WxtBuilder } from '../../types';
+import type { WxtBuilder } from '../../types';
 
 export class UnknownBuilder implements WxtBuilder {
   name = 'unknown';

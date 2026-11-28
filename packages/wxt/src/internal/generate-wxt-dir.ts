@@ -8,14 +8,15 @@ import {
 } from '../internal-utils/entrypoint-utils';
 import { pathExists, writeFileIfDifferent } from '../internal-utils/fs-utils';
 import { normalizePath } from '../internal-utils/path-utils';
-import {
+import type {
   Entrypoint,
   PublicPathEntry,
   WxtDirEntry,
   WxtDirFileEntry,
 } from '../types';
 import { getPublicFiles } from './get-public-files';
-import { Message, parseI18nMessages } from './i18n';
+import type { Message } from './i18n';
+import { parseI18nMessages } from './i18n';
 import {
   getRuntimeEnvEntries,
   getEntrypointRuntimeEnvEntries,

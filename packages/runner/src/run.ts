@@ -2,11 +2,8 @@ import { spawn } from 'node:child_process';
 
 import { runnerDebug } from './debug';
 import { installChromium, installFirefox } from './install';
-import {
-  resolveRunOptions,
-  type ResolvedRunOptions,
-  type RunOptions,
-} from './options';
+import { resolveRunOptions } from './options';
+import type { ResolvedRunOptions, RunOptions } from './options';
 import { promiseWithResolvers } from './promises';
 
 const debugFirefox = runnerDebug.extend('firefox');
