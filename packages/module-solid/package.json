@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@aklinker1/buildc": "catalog:",
+    "oxlint": "catalog:",
     "publint": "catalog:",
     "solid-js": "^1.9.11",
     "tsdown": "catalog:",
