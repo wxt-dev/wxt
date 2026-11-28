@@ -2315,6 +2315,45 @@ describe('Manifest Utils', () => {
     });
   });
 
+  describe('data_collection_permissions', () => {
+    it('should warn when building for Firefox without data_collection_permissions', async () => {
+      setFakeWxt({
+        config: {
+          browser: 'firefox',
+          suppressWarnings: {
+            firefoxId: true,
+          },
+        },
+      });
+
+      await generateManifest([], fakeBuildOutput());
+
+      expect(wxt.logger.warnOnce).toHaveBeenCalledWith(
+        expect.stringContaining('data_collection_permissions'),
+      );
+    });
+  });
+
+  describe('firefox extension id', () => {
+    it('should warn when building for Firefox without an extension id', async () => {
+      setFakeWxt({
+        config: {
+          browser: 'firefox',
+          command: 'build',
+          suppressWarnings: {
+            firefoxDataCollection: true,
+          },
+        },
+      });
+
+      await generateManifest([], fakeBuildOutput());
+
+      expect(wxt.logger.warnOnce).toHaveBeenCalledWith(
+        expect.stringContaining('Firefox requires extension ID'),
+      );
+    });
+  });
+
   describe('stripPathFromMatchPattern', () => {
     it.each([
       ['<all_urls>', '<all_urls>'],
