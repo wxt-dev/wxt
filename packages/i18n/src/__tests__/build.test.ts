@@ -11,8 +11,11 @@ import { describe, it, expect, vi } from 'vitest';
 
 import {
   parseMessagesFile,
+  parseMessagesObject,
+  generateChromeMessages,
   generateChromeMessagesFile,
   generateTypeFile,
+  generateTypeText,
 } from '../build';
 
 vi.mock('node:fs/promises');
@@ -196,6 +199,40 @@ describe('Built Tools', () => {
 
     await expect(parseMessagesFile('invalid.yml')).rejects.toThrowError(
       'Messages file should not contain `null` (found at "invalidField")',
+    );
+  });
+
+  it('should keep each plural form on its own count when only 0 and n are defined', () => {
+    const messages = parseMessagesObject({
+      items: { 0: 'No items', n: '$1 items' },
+    });
+
+    expect(generateChromeMessages(messages).items).toEqual({
+      message: 'No items | $1 items | $1 items',
+    });
+  });
+
+  it('should treat numeric keys without an n form as nested messages', () => {
+    const messages = parseMessagesObject({
+      errors: { 404: 'Not found', 500: 'Server error' },
+    });
+
+    expect(generateChromeMessages(messages)).toMatchObject({
+      errors_404: { message: 'Not found' },
+      errors_500: { message: 'Server error' },
+    });
+    expect(generateTypeText(messages)).toContain(
+      '"errors.404": { substitutions: 0, plural: false };',
+    );
+  });
+
+  it('should throw an error for unsupported plural keys', () => {
+    expect(() =>
+      parseMessagesObject({
+        items: { 1: 'One item', 2: 'Two items', n: '$1 items' },
+      }),
+    ).toThrowError(
+      'Plural message "items" has unsupported key(s) "2". Only 0, 1, and n are supported.',
     );
   });
 });
