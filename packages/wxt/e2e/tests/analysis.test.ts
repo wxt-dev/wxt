@@ -118,7 +118,7 @@ describe('Analysis', () => {
       },
     });
 
-    expect(openMock).toBeCalledTimes(1);
-    expect(openMock).toBeCalledWith(project.resolvePath('stats.html'));
+    expect(openMock).toHaveBeenCalledTimes(1);
+    expect(openMock).toHaveBeenCalledWith(project.resolvePath('stats.html'));
   });
 });
