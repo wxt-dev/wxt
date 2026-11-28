@@ -147,7 +147,10 @@ describe('WebExtRunner', () => {
       expect(webExtCmdRunMock).toHaveBeenCalledTimes(1);
       expect(webExtCmdRunMock).toHaveBeenCalledWith(
         {
-          args: ['--unsafely-disable-devtools-self-xss-warnings'],
+          args: [
+            '--unsafely-disable-devtools-self-xss-warnings',
+            '--test-type',
+          ],
           chromiumPref: {
             devtools: {
               synced_preferences_sync_disabled: {
